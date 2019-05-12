@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -13,18 +14,22 @@ import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import control.*;
 
 public class Home extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
-	private JTextField textField_2;
-	private JPasswordField passwordField;
+	private JTextField userField;
+	private JPasswordField senhaField;
 
 	/**
 	 * Launch the application.
@@ -75,31 +80,64 @@ public class Home extends JFrame {
 		lblUsurio.setBounds(74, 189, 252, 31);
 		panel_1.add(lblUsurio);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(74, 233, 257, 41);
-		panel_1.add(textField_2);
-		textField_2.setColumns(10);
+		userField = new JTextField();
+		userField.setBounds(74, 233, 257, 41);
+		panel_1.add(userField);
+		userField.setColumns(10);
 		
 		JLabel lblSenha = new JLabel("Senha");
 		lblSenha.setFont(new Font("Franklin Gothic Medium", Font.PLAIN, 24));
 		lblSenha.setBounds(79, 304, 252, 30);
 		panel_1.add(lblSenha);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(79, 348, 252, 41);
-		panel_1.add(passwordField);
+		senhaField = new JPasswordField();
+		senhaField.setBounds(79, 348, 252, 41);
+		panel_1.add(senhaField);
 		
 		JButton btnLogin = new JButton("Login");
 		
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				dispose();
+				DB bd = new DB();
+				
+				if(bd.getConnection()) {
+					
+					String sqlLogin = "SELECT * FROM Login WHERE username = ? AND senha = ?";
+					
+					try {
+						bd.st = bd.con.prepareStatement(sqlLogin);
+						bd.st.setString(1,userField.getText());
+						bd.st.setString(2,new String(senhaField.getPassword()));
+						bd.rs = bd.st.executeQuery();
+
+						
+						if(bd.rs.next()) {
+							dispose();
+							
+							DashBoard dash = new DashBoard();
+							dash.setVisible(true);
+							dash.setLocationRelativeTo(null);
+							dash.setResizable(false);
+						}else {
+							System.out.println(bd.rs = bd.st.executeQuery());
+							System.out.println(bd.rs.next());
+							JOptionPane.showMessageDialog(null, "Usuario ou senha Incorreto");
+						}
+					}catch(SQLException erro) {
+						JOptionPane.showMessageDialog(null, erro.toString());
+					}finally {
+						bd.close();
+					}
+					
+				}
+				
+				/*dispose();
 				
 				DashBoard dash = new DashBoard();
 				dash.setVisible(true);
 				dash.setLocationRelativeTo(null);
-				dash.setResizable(false);
+				dash.setResizable(false);*/
 				
 			}
 		});

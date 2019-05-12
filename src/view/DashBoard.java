@@ -9,12 +9,15 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -24,6 +27,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import model.*;
+import control.*;
+import javax.swing.JTable;
+
 
 public class DashBoard extends JFrame {
 
@@ -37,14 +43,17 @@ public class DashBoard extends JFrame {
 	private JTextField cliente_rua;
 	private JTextField cliente_numero;
 	private JTextField cliente_CEP;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField nomeProduto;
+	private JTextField tipoProduto;
+	private JTextField precoProduto;
+	private JTable tableProdutos;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		DB db = new DB();
+		db.getConnection();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -85,6 +94,8 @@ public class DashBoard extends JFrame {
 		card_panel.setBounds(264, 63, 1130, 785);
 		contentPane.add(card_panel);
 		card_panel.setLayout(new CardLayout(0, 0));
+		
+		
 		
 		JPanel home_panel = new JPanel();
 		home_panel.setForeground(Color.WHITE);
@@ -149,30 +160,83 @@ public class DashBoard extends JFrame {
 		lblNome.setBounds(108, 168, 80, 28);
 		cadas_prod_panel.add(lblNome);
 		
-		textField = new JTextField();
-		textField.setBounds(198, 165, 197, 31);
-		cadas_prod_panel.add(textField);
-		textField.setColumns(10);
+		nomeProduto = new JTextField();
+		nomeProduto.setBounds(198, 165, 197, 31);
+		cadas_prod_panel.add(nomeProduto);
+		nomeProduto.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(198, 213, 197, 31);
-		cadas_prod_panel.add(textField_1);
+		String[] colunas = {"Nome", "Tipo", "Preço"};
+		
+		Object [][] dados = {
+		        {"Ana Monteiro", "48 9923-7898", "ana.monteiro@gmail.com"},
+		        {"João da Silva", "48 8890-3345", "joaosilva@hotmail.com"},
+		        {"Pedro Cascaes", "48 9870-5634", "pedrinho@gmail.com"}
+		    };
+		
+		DB bd = new DB();
+		
+		if(bd.getConnection()) {
+			
+			String sqlTable = "SELECT * from produtos";
+			
+			try {
+				bd.st = bd.con.prepareStatement(sqlTable);
+				bd.rs = bd.st.executeQuery();
+				
+				bd.rs.next();
+				
+
+				while(bd.rs.next()) {
+					//Object[][] dados = {bd.rs.getString("nome").toString(), bd.rs.getString("tipo").toString(), bd.rs.getString("valor_unitario").toString()};
+				}
+			}catch(SQLException erro) {
+				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+		}
+		
+		tableProdutos = new JTable(dados, colunas);
+		tableProdutos.setBounds(504, 153, 374, 300);
+		cadas_prod_panel.add(tableProdutos);
+		
+		tipoProduto = new JTextField();
+		tipoProduto.setColumns(10);
+		tipoProduto.setBounds(198, 213, 197, 31);
+		cadas_prod_panel.add(tipoProduto);
 		
 		JLabel lblTipo = new JLabel("Tipo");
 		lblTipo.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblTipo.setBounds(108, 216, 80, 28);
 		cadas_prod_panel.add(lblTipo);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(198, 265, 197, 31);
-		cadas_prod_panel.add(textField_2);
+		precoProduto = new JTextField();
+		precoProduto.setColumns(10);
+		precoProduto.setBounds(198, 265, 197, 31);
+		cadas_prod_panel.add(precoProduto);
 		
 		JLabel lblPreo = new JLabel("Pre\u00E7o");
 		lblPreo.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblPreo.setBounds(108, 268, 80, 28);
 		cadas_prod_panel.add(lblPreo);
+		
+		JButton btnSalvarProdutos = new JButton("Salvar");
+		btnSalvarProdutos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				if(nomeProduto.getText() != "" && tipoProduto.getText() != "" && precoProduto.getText() != "" ) {
+					Produto prod = new Produto();
+					
+					prod.salvarProduto(nomeProduto.getText(), tipoProduto.getText(), Double.parseDouble(precoProduto.getText()));
+				}else {
+					JOptionPane.showMessageDialog(null, "Favor preencher todos os campos!!");
+				}
+				
+			}
+		});
+		btnSalvarProdutos.setBounds(198, 342, 197, 61);
+		cadas_prod_panel.add(btnSalvarProdutos);
 		
 		JPanel cadas_clientes_panel = new JPanel();
 		cadas_clientes_panel.setBackground(Color.WHITE);
@@ -352,6 +416,8 @@ public class DashBoard extends JFrame {
 				CardLayout cl = (CardLayout) card_panel.getLayout();
 				cl.show(card_panel, "name_94484432854786");
 				
+				
+				
 				fixedLabelText = "Cadastro";
 			}
 			@Override
@@ -397,9 +463,7 @@ public class DashBoard extends JFrame {
 		JPanel top_fixed_panel = new JPanel();
 		top_fixed_panel.setBackground(new Color(196, 77, 88));
 		top_fixed_panel.setBounds(264, 0, 1130, 64);
-		DisplayCadastro cad = new DisplayCadastro();
 		contentPane.add(top_fixed_panel);
-		top_fixed_panel.add(cad);
 		top_fixed_panel.setLayout(null);
 		
 		JButton btnX = new JButton("X");

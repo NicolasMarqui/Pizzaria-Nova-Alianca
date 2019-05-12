@@ -1,4 +1,9 @@
 package model;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
+import control.*;
 
 public class Produto {
 	private int cod_produto;
@@ -70,5 +75,33 @@ public class Produto {
 		this.nome = nome;
 	}
 	
+	public void salvarProduto(String nome, String tipo, double preco) {
+		DB bd = new DB();
+			
+		if(bd.getConnection()) {
+			
+			String sqlSalvarProd = "INSERT INTO produtos(nome,tipo,valor_unitario) values(?, ? , ?)";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(sqlSalvarProd);
+				bd.st.setString(1,nome);
+				bd.st.setString(2,tipo);
+				bd.st.setDouble(3,preco);
+				bd.rs = bd.st.executeQuery();
+				
+				JOptionPane.showMessageDialog(null, "Produto salvo com sucesso");
+				
+			}catch(SQLException erro) {
+				JOptionPane.showMessageDialog(null, "Não foi possivel salvar o produto, tente novamente mais tarde");
+				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+		}
+	}
 	
+	public void popularTabela() {
+		
+	}
 }
