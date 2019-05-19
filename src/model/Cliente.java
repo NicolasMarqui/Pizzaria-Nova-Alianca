@@ -194,20 +194,26 @@ public class Cliente {
 			
 		if(bd.getConnection()) {
 			
-			String sqlSalvarProd = "INSERT INTO clientes(nome,tipo,valor_unitario) values(?, ? , ?)";
+			String sqlSalvarProd = "INSERT INTO clientes(nome,cpf,cidade,rua,bairro,numero,cep,telefone) values(?, ? , ?, ? , ? , ?, ?, ?)";
 			
 			try{
 				
 				bd.st = bd.con.prepareStatement(sqlSalvarProd);
 				bd.st.setString(1,nome);
-				bd.st.setString(2,tipo);
-				bd.st.setDouble(3,preco);
+				bd.st.setString(2,cpf);
+				bd.st.setString(3,cidade);
+				bd.st.setString(4,rua);
+				bd.st.setString(5,bairro);
+				bd.st.setString(6,numero);
+				bd.st.setString(7,cep);
+				bd.st.setString(8,telefone);
+				
 				bd.rs = bd.st.executeQuery();
 				
-				JOptionPane.showMessageDialog(null, "Produto salvo com sucesso");
+				JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso");
 				
 			}catch(SQLException erro) {
-				JOptionPane.showMessageDialog(null, "Não foi possivel salvar o produto, tente novamente mais tarde");
+				JOptionPane.showMessageDialog(null, "Não foi possivel salvar o cliente, tente novamente mais tarde");
 				JOptionPane.showMessageDialog(null, erro.toString());
 			}finally {
 				bd.close();

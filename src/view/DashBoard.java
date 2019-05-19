@@ -38,13 +38,13 @@ public class DashBoard extends JFrame {
 	private JPanel contentPane;
 	private String fixedLabelText = "Home"; 
 	private JTextField cliente_nome;
-	private JTextField cliente_telefone;
 	private JTextField cliente_cpf;
 	private JTextField cliente_cidade;
-	private JTextField cliente_bairro;
 	private JTextField cliente_rua;
+	private JTextField cliente_bairro;
 	private JTextField cliente_numero;
-	private JTextField cliente_CEP;
+	private JTextField cliente_cep;
+	private JTextField cliente_telefone;
 	private JTextField nomeProduto;
 	private JTextField tipoProduto;
 	private JTextField precoProduto;
@@ -252,35 +252,35 @@ public class DashBoard extends JFrame {
 		cadas_clientes_panel.add(cliente_nome);
 		cliente_nome.setColumns(10);
 		
-		cliente_telefone = new JTextField();
-		cliente_telefone.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		cliente_telefone.setColumns(10);
-		cliente_telefone.setBounds(227, 208, 206, 35);
-		cadas_clientes_panel.add(cliente_telefone);
-		
-		JLabel lblTelefone = new JLabel("Telefone");
-		lblTelefone.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lblTelefone.setBounds(97, 214, 100, 23);
-		cadas_clientes_panel.add(lblTelefone);
-		
 		cliente_cpf = new JTextField();
 		cliente_cpf.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		cliente_cpf.setColumns(10);
-		cliente_cpf.setBounds(227, 263, 206, 40);
+		cliente_cpf.setBounds(227, 208, 206, 35);
 		cadas_clientes_panel.add(cliente_cpf);
 		
-		JLabel lblCpf = new JLabel("CPF");
-		lblCpf.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lblCpf.setBounds(97, 271, 100, 23);
-		cadas_clientes_panel.add(lblCpf);
+		JLabel lblCPF = new JLabel("CPF");
+		lblCPF.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblCPF.setBounds(97, 214, 100, 23);
+		cadas_clientes_panel.add(lblCPF);
 		
 		cliente_cidade = new JTextField();
 		cliente_cidade.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		cliente_cidade.setColumns(10);
-		cliente_cidade.setBounds(227, 314, 208, 35);
+		cliente_cidade.setBounds(227, 263, 206, 40);
 		cadas_clientes_panel.add(cliente_cidade);
 		
-		JLabel lblCidade = new JLabel("Cidade");
+		JLabel lblCpf = new JLabel("Cidade");
+		lblCpf.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblCpf.setBounds(97, 271, 100, 23);
+		cadas_clientes_panel.add(lblCpf);
+		
+		cliente_rua = new JTextField();
+		cliente_rua.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		cliente_rua.setColumns(10);
+		cliente_rua.setBounds(227, 314, 208, 35);
+		cadas_clientes_panel.add(cliente_rua);
+		
+		JLabel lblCidade = new JLabel("Rua");
 		lblCidade.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblCidade.setBounds(97, 326, 100, 23);
 		cadas_clientes_panel.add(lblCidade);
@@ -296,35 +296,35 @@ public class DashBoard extends JFrame {
 		lblBairro.setBounds(97, 375, 100, 23);
 		cadas_clientes_panel.add(lblBairro);
 		
-		cliente_rua = new JTextField();
-		cliente_rua.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		cliente_rua.setColumns(10);
-		cliente_rua.setBounds(684, 154, 351, 35);
-		cadas_clientes_panel.add(cliente_rua);
+		cliente_numero = new JTextField();
+		cliente_numero.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		cliente_numero.setColumns(10);
+		cliente_numero.setBounds(684, 154, 168, 35);
+		cadas_clientes_panel.add(cliente_numero);
 		
-		JLabel lblRua = new JLabel("Rua");
+		JLabel lblRua = new JLabel("Numero");
 		lblRua.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblRua.setBounds(574, 160, 100, 23);
 		cadas_clientes_panel.add(lblRua);
 		
-		cliente_numero = new JTextField();
-		cliente_numero.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		cliente_numero.setColumns(10);
-		cliente_numero.setBounds(684, 206, 168, 39);
-		cadas_clientes_panel.add(cliente_numero);
+		cliente_cep = new JTextField();
+		cliente_cep.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		cliente_cep.setColumns(10);
+		cliente_cep.setBounds(684, 206, 168, 39);
+		cadas_clientes_panel.add(cliente_cep);
 		
-		JLabel lblNumero = new JLabel("Numero");
+		JLabel lblNumero = new JLabel("CEP");
 		lblNumero.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblNumero.setBounds(574, 214, 100, 23);
 		cadas_clientes_panel.add(lblNumero);
 		
-		cliente_CEP = new JTextField();
-		cliente_CEP.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		cliente_CEP.setColumns(10);
-		cliente_CEP.setBounds(684, 267, 237, 31);
-		cadas_clientes_panel.add(cliente_CEP);
+		cliente_telefone = new JTextField();
+		cliente_telefone.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		cliente_telefone.setColumns(10);
+		cliente_telefone.setBounds(684, 267, 237, 31);
+		cadas_clientes_panel.add(cliente_telefone);
 		
-		JLabel lblCep = new JLabel("CEP");
+		JLabel lblCep = new JLabel("Telefone");
 		lblCep.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblCep.setBounds(574, 271, 100, 23);
 		cadas_clientes_panel.add(lblCep);
@@ -333,9 +333,16 @@ public class DashBoard extends JFrame {
 		btnCadastrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Cliente clie = new Cliente();
-				clie.setNome(cliente_nome.getText());
-				System.out.println(clie.getNome());
+				Cliente cliente = new Cliente();
+				cliente.salvarCliente(cliente_nome.getText(),cliente_cpf.getText(),cliente_cidade.getText(),cliente_rua.getText(),cliente_bairro.getText(),cliente_numero.getText(),cliente_cep.getText(),cliente_telefone.getText());
+				cliente_nome.setText("");
+				cliente_cpf.setText("");
+				cliente_cidade.setText("");
+				cliente_rua.setText("");
+				cliente_bairro.setText("");
+				cliente_numero.setText("");
+				cliente_cep.setText("");
+				cliente_telefone.setText("");
 			}
 		});
 		btnCadastrar.setBounds(398, 451, 361, 54);
