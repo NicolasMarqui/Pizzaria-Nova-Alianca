@@ -88,7 +88,7 @@ public class Produto {
 				bd.st.setString(1,nome);
 				bd.st.setString(2,tipo);
 				bd.st.setDouble(3,preco);
-				bd.rs = bd.st.executeQuery();
+				bd.st.executeUpdate();
 				
 				JOptionPane.showMessageDialog(null, "Produto salvo com sucesso");
 				

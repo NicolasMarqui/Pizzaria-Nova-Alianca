@@ -50,6 +50,7 @@ public class DashBoard extends JFrame {
 	private JTextField precoProduto;
 	private JTable tableProdutos;
 	private DefaultTableModel model;
+	private JTable tableProd;
 
 	/**
 	 * Launch the application.
@@ -167,6 +168,13 @@ public class DashBoard extends JFrame {
 		nomeProduto.setBounds(198, 165, 197, 31);
 		cadas_prod_panel.add(nomeProduto);
 		nomeProduto.setColumns(10);
+		tableProd = new JTable();
+		tableProd.setBounds(467, 153, 622, 200);
+		cadas_prod_panel.add(tableProd);
+		JScrollPane sp1 = new JScrollPane(tableProdutos);
+		//cadas_prod_panel.add(tableProdutos);
+		cadas_prod_panel.add(sp1);
+		
 		
 		
 		DB bd = new DB();
@@ -177,11 +185,10 @@ public class DashBoard extends JFrame {
 				
 				
 				model = TableModel.getModel(bd, "SELECT * FROM produtos");
-				tableProdutos = new JTable(model);
-				tableProdutos.setBounds(504, 153, 400, 300);
-				JScrollPane sp1 = new JScrollPane(tableProdutos);
-				cadas_prod_panel.add(tableProdutos);
-				cadas_prod_panel.add(sp1);
+				tableProd.setModel(model);
+				
+				
+				
 				
 			}catch(IllegalArgumentException e) {
 				JOptionPane.showMessageDialog(null, e.toString());
@@ -212,22 +219,29 @@ public class DashBoard extends JFrame {
 		cadas_prod_panel.add(lblPreo);
 		
 		JButton btnSalvarProdutos = new JButton("Salvar");
+		btnSalvarProdutos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnSalvarProdutos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
-				if(nomeProduto.getText() != "" && tipoProduto.getText() != "" && precoProduto.getText() != "" ) {
-					Produto prod = new Produto();
+				if(nomeProduto.getText() == null || nomeProduto.getText().trim().isEmpty() || tipoProduto.getText() == null || tipoProduto.getText().trim().isEmpty() || precoProduto.getText() == null || precoProduto.getText().trim().isEmpty()) {
 					
-					prod.salvarProduto(nomeProduto.getText(), tipoProduto.getText(), Double.parseDouble(precoProduto.getText()));
-				}else {
 					JOptionPane.showMessageDialog(null, "Favor preencher todos os campos!!");
+					
+				}else {
+					Produto prod = new Produto();		
+					prod.salvarProduto(nomeProduto.getText(), tipoProduto.getText(), Double.parseDouble(precoProduto.getText()));
 				}
 				
 			}
 		});
 		btnSalvarProdutos.setBounds(198, 342, 197, 61);
 		cadas_prod_panel.add(btnSalvarProdutos);
+		
+		
 		
 		JPanel cadas_clientes_panel = new JPanel();
 		cadas_clientes_panel.setBackground(Color.WHITE);
@@ -330,19 +344,29 @@ public class DashBoard extends JFrame {
 		cadas_clientes_panel.add(lblCep);
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnCadastrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Cliente cliente = new Cliente();
-				cliente.salvarCliente(cliente_nome.getText(),cliente_cpf.getText(),cliente_cidade.getText(),cliente_rua.getText(),cliente_bairro.getText(),cliente_numero.getText(),cliente_cep.getText(),cliente_telefone.getText());
-				cliente_nome.setText("");
-				cliente_cpf.setText("");
-				cliente_cidade.setText("");
-				cliente_rua.setText("");
-				cliente_bairro.setText("");
-				cliente_numero.setText("");
-				cliente_cep.setText("");
-				cliente_telefone.setText("");
+				if(cliente_nome.getText() == null || cliente_nome.getText().trim().isEmpty() || cliente_cpf.getText() == null || cliente_cpf.getText().trim().isEmpty() || cliente_cidade.getText() == null || cliente_cidade.getText().trim().isEmpty() || cliente_rua.getText() == null || cliente_rua.getText().trim().isEmpty() || cliente_bairro.getText() == null || cliente_bairro.getText().trim().isEmpty() || cliente_numero.getText() == null || cliente_numero.getText().trim().isEmpty() || cliente_cep.getText() == null || cliente_cep.getText().trim().isEmpty() || cliente_telefone.getText() == null || cliente_telefone.getText().trim().isEmpty()) {
+					
+					JOptionPane.showMessageDialog(null, "Preencha todos os campos");
+					
+				}else {
+					Cliente cliente = new Cliente();
+					cliente.salvarCliente(cliente_nome.getText(),cliente_cpf.getText(),cliente_cidade.getText(),cliente_rua.getText(),cliente_bairro.getText(),cliente_numero.getText(),cliente_cep.getText(),cliente_telefone.getText());
+					cliente_nome.setText("");
+					cliente_cpf.setText("");
+					cliente_cidade.setText("");
+					cliente_rua.setText("");
+					cliente_bairro.setText("");
+					cliente_numero.setText("");
+					cliente_cep.setText("");
+					cliente_telefone.setText("");
+				}
 			}
 		});
 		btnCadastrar.setBounds(398, 451, 361, 54);
@@ -455,6 +479,22 @@ public class DashBoard extends JFrame {
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setBackground(Color.BLACK);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		
+		JLabel lblEditarClientes = new JLabel("Editar Clientes");
+		lblEditarClientes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				EditarCliente editar = new EditarCliente();
+				editar.setVisible(true);
+				editar.setLocationRelativeTo(null);
+				editar.setResizable(false);
+				lblEditarClientes.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
+		lblEditarClientes.setForeground(Color.WHITE);
+		lblEditarClientes.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblEditarClientes.setBounds(75, 356, 132, 28);
+		side_nav.add(lblEditarClientes);
 		
 		/* PAINEL FIXO CIMA */
 		
