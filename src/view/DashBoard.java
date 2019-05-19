@@ -5,9 +5,11 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -47,6 +49,7 @@ public class DashBoard extends JFrame {
 	private JTextField tipoProduto;
 	private JTextField precoProduto;
 	private JTable tableProdutos;
+	private DefaultTableModel model;
 
 	/**
 	 * Launch the application.
@@ -165,40 +168,28 @@ public class DashBoard extends JFrame {
 		cadas_prod_panel.add(nomeProduto);
 		nomeProduto.setColumns(10);
 		
-		String[] colunas = {"Nome", "Tipo", "Preço"};
-		
-		Object [][] dados = {
-		        {"Ana Monteiro", "48 9923-7898", "ana.monteiro@gmail.com"},
-		        {"João da Silva", "48 8890-3345", "joaosilva@hotmail.com"},
-		        {"Pedro Cascaes", "48 9870-5634", "pedrinho@gmail.com"}
-		    };
 		
 		DB bd = new DB();
 		
 		if(bd.getConnection()) {
-			
-			String sqlTable = "SELECT * from produtos";
-			
+					
 			try {
-				bd.st = bd.con.prepareStatement(sqlTable);
-				bd.rs = bd.st.executeQuery();
 				
-				bd.rs.next();
 				
-
-				while(bd.rs.next()) {
-					//Object[][] dados = {bd.rs.getString("nome").toString(), bd.rs.getString("tipo").toString(), bd.rs.getString("valor_unitario").toString()};
-				}
-			}catch(SQLException erro) {
-				JOptionPane.showMessageDialog(null, erro.toString());
+				model = TableModel.getModel(bd, "SELECT * FROM produtos");
+				tableProdutos = new JTable(model);
+				tableProdutos.setBounds(504, 153, 400, 300);
+				JScrollPane sp1 = new JScrollPane(tableProdutos);
+				cadas_prod_panel.add(tableProdutos);
+				cadas_prod_panel.add(sp1);
+				
+			}catch(IllegalArgumentException e) {
+				JOptionPane.showMessageDialog(null, e.toString());
 			}finally {
 				bd.close();
 			}
 		}
-		
-		tableProdutos = new JTable(dados, colunas);
-		tableProdutos.setBounds(504, 153, 374, 300);
-		cadas_prod_panel.add(tableProdutos);
+			
 		
 		tipoProduto = new JTextField();
 		tipoProduto.setColumns(10);
