@@ -178,7 +178,9 @@ public class Cliente {
 	 * @return String - codigo do cliente
 	 */
 	public int getCodigoCliente() {
+		System.out.println("Cod Retornado é " + this.codigoCliente);
 		return codigoCliente;
+
 	}
 
 	/**
@@ -187,6 +189,8 @@ public class Cliente {
 	 */
 	public void setCodigoCliente(int codigoCliente) {
 		this.codigoCliente = codigoCliente;
+		
+		System.out.println("Cod é " + this.codigoCliente);
 	}
 	
 	public void salvarCliente(String nome, String cpf, String cidade, String rua, String bairro , String numero, String cep, String telefone) {
@@ -208,7 +212,7 @@ public class Cliente {
 				bd.st.setString(7,cep);
 				bd.st.setString(8,telefone);
 				
-				bd.rs = bd.st.executeQuery();
+				bd.st.executeUpdate();
 				
 				JOptionPane.showMessageDialog(null, "Cliente salvo com sucesso");
 				
@@ -220,6 +224,49 @@ public class Cliente {
 			}
 		}
 	}
+	
+	public void atualizarCliente(int id , String nome, String cpf, String cidade, String rua, String bairro , String numero, String cep, String telefone) {
+		
+		DB bd = new DB();
+		
+		if(bd.getConnection()) {
+			
+			String sqlAtualizarProd = "UPDATE clientes SET nome = ? , cpf = ? , cidade = ? , rua = ? , bairro = ? , numero = ?  , cep = ? , telefone = ? WHERE codigoCliente = ?";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(sqlAtualizarProd);
+				bd.st.setString(1,nome);
+				bd.st.setString(2,cpf);
+				bd.st.setString(3,cidade);
+				bd.st.setString(4,rua);
+				bd.st.setString(5,bairro);
+				bd.st.setString(6,numero);
+				bd.st.setString(7,cep);
+				bd.st.setString(8,telefone);
+				bd.st.setInt(9, id);
+				
+				bd.st.executeUpdate();
+				JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso");
+				
+			}catch(SQLException erro) {
+				JOptionPane.showMessageDialog(null, "Não foi possivel atualizar o cliente, tente novamente mais tarde");
+				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+			
+		}
+		
+	}
+	
+	/*public void deletarCliente(int id) {
+		DB bd = new DB();
+		
+		if(bd.getConnection()) {
+			
+		}
+	}*/
 	
 	
 }

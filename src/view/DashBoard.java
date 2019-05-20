@@ -171,9 +171,7 @@ public class DashBoard extends JFrame {
 		tableProd = new JTable();
 		tableProd.setBounds(467, 153, 622, 200);
 		cadas_prod_panel.add(tableProd);
-		JScrollPane sp1 = new JScrollPane(tableProdutos);
-		//cadas_prod_panel.add(tableProdutos);
-		cadas_prod_panel.add(sp1);
+		
 		
 		
 		
@@ -186,7 +184,9 @@ public class DashBoard extends JFrame {
 				
 				model = TableModel.getModel(bd, "SELECT * FROM produtos");
 				tableProd.setModel(model);
-				
+				System.out.println(model);
+				//JScrollPane sp1 = new JScrollPane(tableProd);
+				//cadas_prod_panel.add(sp1);
 				
 				
 				
