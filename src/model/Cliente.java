@@ -260,13 +260,30 @@ public class Cliente {
 		
 	}
 	
-	/*public void deletarCliente(int id) {
+	public void deletarCliente(int id) {
 		DB bd = new DB();
 		
 		if(bd.getConnection()) {
 			
+			String sqlDeletarCliente = "DELETE FROM clientes WHERE codigoCliente = ?";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(sqlDeletarCliente);
+				bd.st.setInt(1,id);
+				
+				bd.st.executeUpdate();
+				JOptionPane.showMessageDialog(null, "Cliente Deletado com sucesso");
+				
+			}catch(SQLException erro) {
+				JOptionPane.showMessageDialog(null, "Não foi possivel excluir o cliente, tente novamente mais tarde");
+				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+			
 		}
-	}*/
+	}
 	
 	
 }

@@ -25,6 +25,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class EditarCliente extends JFrame {
 
@@ -214,12 +216,41 @@ public class EditarCliente extends JFrame {
 				Cliente cliente = new Cliente();
 				
 				cliente.atualizarCliente(Integer.parseInt(Id.getText()), editarNomeCliente.getText(), editarCPFCliente.getText(), editarCidadeCliente.getText(), editarRuaCliente.getText(), editarBairroCliente.getText(), editarNumeroCliente.getText(), editarCPFCliente.getText(), editarTelefoneCliente.getText());
+				
+				Id.setText("");
+				editarNomeCliente.setText("");
+				editarCPFCliente.setText("");
+				editarCidadeCliente.setText("");
+				editarRuaCliente.setText("");
+				editarBairroCliente.setText("");
+				editarNumeroCliente.setText("");
+				editarCEPCliente.setText("");
+				editarTelefoneCliente.setText("");
 			}
 		});
 		btnAtualizar.setBounds(511, 324, 168, 48);
 		contentPane.add(btnAtualizar);
 		
 		JButton btnRemoverCliente = new JButton("Remover Cliente");
+		btnRemoverCliente.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				Cliente cliente = new Cliente();
+				
+				cliente.deletarCliente(Integer.parseInt(Id.getText()));
+				Id.setText("");
+				editarNomeCliente.setText("");
+				editarCPFCliente.setText("");
+				editarCidadeCliente.setText("");
+				editarRuaCliente.setText("");
+				editarBairroCliente.setText("");
+				editarNumeroCliente.setText("");
+				editarCEPCliente.setText("");
+				editarTelefoneCliente.setText("");
+				
+			}
+		});
 		btnRemoverCliente.setBackground(Color.RED);
 		btnRemoverCliente.setForeground(Color.BLACK);
 		btnRemoverCliente.setBounds(511, 399, 168, 48);
