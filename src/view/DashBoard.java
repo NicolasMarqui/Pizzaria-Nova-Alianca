@@ -10,6 +10,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -20,10 +21,13 @@ import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
@@ -31,6 +35,7 @@ import javax.swing.JTextField;
 import model.*;
 import control.*;
 import javax.swing.JTable;
+import control.Masks;
 
 
 public class DashBoard extends JFrame {
@@ -90,7 +95,7 @@ public class DashBoard extends JFrame {
 
 	}
 	
-	public void displayItens() {
+	public void displayItens(){
 		
 		ImageIcon logo = new ImageIcon("images\\logo.png");
 		
@@ -266,7 +271,15 @@ public class DashBoard extends JFrame {
 		cadas_clientes_panel.add(cliente_nome);
 		cliente_nome.setColumns(10);
 		
-		cliente_cpf = new JTextField();
+		try {
+			cliente_cpf =  new JFormattedTextField(new MaskFormatter("###.###.###-##"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		//private JTextField telefone = new JFormattedTextField(new MaskFormatter("(##) #####-####"));
+	
 		cliente_cpf.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		cliente_cpf.setColumns(10);
 		cliente_cpf.setBounds(227, 208, 206, 35);
@@ -321,7 +334,12 @@ public class DashBoard extends JFrame {
 		lblRua.setBounds(574, 160, 100, 23);
 		cadas_clientes_panel.add(lblRua);
 		
-		cliente_cep = new JTextField();
+		try {
+			cliente_cep = new JFormattedTextField(new MaskFormatter("#####-###"));
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		cliente_cep.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		cliente_cep.setColumns(10);
 		cliente_cep.setBounds(684, 206, 168, 39);
@@ -332,7 +350,12 @@ public class DashBoard extends JFrame {
 		lblNumero.setBounds(574, 214, 100, 23);
 		cadas_clientes_panel.add(lblNumero);
 		
-		cliente_telefone = new JTextField();
+		try {
+			cliente_telefone = new JFormattedTextField(new MaskFormatter("(##) #####-####"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		cliente_telefone.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		cliente_telefone.setColumns(10);
 		cliente_telefone.setBounds(684, 267, 237, 31);
@@ -545,4 +568,6 @@ public class DashBoard extends JFrame {
 
 		//END OF SIDE MENU
 	}
+	
 }
+
