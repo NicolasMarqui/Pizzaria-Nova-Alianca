@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 
 import control.TableModel;
 import model.*;
@@ -15,6 +16,7 @@ import control.*;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,6 +26,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -54,6 +58,7 @@ public class EditarCliente extends JFrame {
 				try {
 					EditarCliente frame = new EditarCliente();
 					frame.setVisible(true);
+					frame.setTitle("Editar/Remover Cliente");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -65,7 +70,7 @@ public class EditarCliente extends JFrame {
 	 * Create the frame.
 	 */
 	public EditarCliente() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 898, 573);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -78,7 +83,7 @@ public class EditarCliente extends JFrame {
 		
 		JLabel label = new JLabel("Nome");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		label.setBounds(55, 176, 100, 23);
+		label.setBounds(56, 186, 100, 23);
 		contentPane.add(label);
 		
 		editarNomeCliente = new JTextField();
@@ -87,7 +92,12 @@ public class EditarCliente extends JFrame {
 		editarNomeCliente.setBounds(167, 182, 206, 35);
 		contentPane.add(editarNomeCliente);
 		
-		editarCPFCliente = new JTextField();
+		try {
+			editarCPFCliente = new JFormattedTextField(new MaskFormatter("###.###.###-##"));
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		editarCPFCliente.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		editarCPFCliente.setColumns(10);
 		editarCPFCliente.setBounds(169, 233, 206, 35);
@@ -142,7 +152,12 @@ public class EditarCliente extends JFrame {
 		label_6.setBounds(56, 450, 100, 23);
 		contentPane.add(label_6);
 		
-		editarCEPCliente = new JTextField();
+		try {
+			editarCEPCliente = new JFormattedTextField(new MaskFormatter("#####-###"));
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		editarCEPCliente.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		editarCEPCliente.setColumns(10);
 		editarCEPCliente.setBounds(610, 178, 168, 35);
@@ -153,7 +168,12 @@ public class EditarCliente extends JFrame {
 		label_7.setBounds(520, 182, 100, 23);
 		contentPane.add(label_7);
 		
-		editarTelefoneCliente = new JTextField();
+		try {
+			editarTelefoneCliente = new JFormattedTextField(new MaskFormatter("(##) #####-####"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		editarTelefoneCliente.setFont(new Font("Tahoma", Font.PLAIN, 19));
 		editarTelefoneCliente.setColumns(10);
 		editarTelefoneCliente.setBounds(613, 243, 237, 31);
@@ -193,15 +213,25 @@ public class EditarCliente extends JFrame {
 		seachCliente.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				try {
-					String sql = "SELECT * FROM clientes WHERE nome LIKE '"+seachCliente.getText()+"%'";
-					model = TableModel.getModel(bd, sql);
-					table.setModel(model);
+				
+				if(bd.getConnection()) {
+					String sql = "SELECT * FROM clientes WHERE nome LIKE ?";
 					
-				}catch(IllegalArgumentException erro) {					
-					JOptionPane.showMessageDialog(null, erro.toString());
-				}finally {
-					bd.close();
+					try {
+						bd.st = bd.con.prepareStatement(sql);
+						bd.st.setString(1, "%" + seachCliente.getText() + "%");
+						
+						model = TableModel.getModel(bd, sql);
+						table.setModel(model);
+						
+					}catch(IllegalArgumentException erro) {					
+						JOptionPane.showMessageDialog(null, erro.toString());
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}finally {
+						bd.close();
+					}
 				}
 			}
 		});
@@ -215,7 +245,7 @@ public class EditarCliente extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				Cliente cliente = new Cliente();
 				
-				cliente.atualizarCliente(Integer.parseInt(Id.getText()), editarNomeCliente.getText(), editarCPFCliente.getText(), editarCidadeCliente.getText(), editarRuaCliente.getText(), editarBairroCliente.getText(), editarNumeroCliente.getText(), editarCPFCliente.getText(), editarTelefoneCliente.getText());
+				cliente.atualizarCliente(Integer.parseInt(Id.getText()), editarNomeCliente.getText(), editarCPFCliente.getText(), editarCidadeCliente.getText(), editarRuaCliente.getText(), editarBairroCliente.getText(), editarNumeroCliente.getText(), editarCEPCliente.getText(), editarTelefoneCliente.getText());
 				
 				Id.setText("");
 				editarNomeCliente.setText("");

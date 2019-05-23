@@ -402,13 +402,28 @@ public class DashBoard extends JFrame {
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		relatorio.add(lblNewLabel_3);
 		
+		JPanel panel_venda = new JPanel();
+		panel_venda.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				CardLayout cl = (CardLayout) card_panel.getLayout();
+				cl.show(card_panel, "panel_venda");
+				
+				fixedLabelText = "Venda";
+			}
+		});
+		card_panel.add(panel_venda, "panel_venda");
+		
+		JLabel lblVenda_1 = new JLabel("Venda");
+		panel_venda.add(lblVenda_1);
+		
 		/*FIM DOS CAMPOS DE CLIENTE*/
 		
 		//Side MENU 
 		
 		JPanel side_nav = new JPanel();
 		side_nav.setForeground(Color.WHITE);
-		side_nav.setBackground(new Color(196, 77, 88));
+		side_nav.setBackground(new Color(171, 0, 0));
 		side_nav.setBounds(0, 0, 266, 785);
 		contentPane.add(side_nav);
 		side_nav.setLayout(null);
@@ -437,6 +452,10 @@ public class DashBoard extends JFrame {
 				
 				fixedLabelText = "Relatorio";
 			}
+			
+			public void mouseEntered(MouseEvent e) {
+				lblRelatrio.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
 		});
 		lblRelatrio.setForeground(Color.WHITE);
 		lblRelatrio.setBackground(Color.WHITE);
@@ -445,6 +464,21 @@ public class DashBoard extends JFrame {
 		side_nav.add(lblRelatrio);
 		
 		JLabel lblVenda = new JLabel("Venda");
+		lblVenda.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				NovaVenda venda = new NovaVenda();
+				
+				venda.setVisible(true);
+				venda.setLocationRelativeTo(null);
+				venda.setResizable(false);
+				
+			}
+			
+			public void mouseEntered(MouseEvent e) {
+				lblVenda.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
 		lblVenda.setForeground(Color.WHITE);
 		lblVenda.setBackground(Color.WHITE);
 		lblVenda.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -527,26 +561,26 @@ public class DashBoard extends JFrame {
 		contentPane.add(top_fixed_panel);
 		top_fixed_panel.setLayout(null);
 		
-		JButton btnX = new JButton("X");
+		JButton btnFechar = new JButton("X");
 		
 		
-				btnX.addMouseListener(new MouseAdapter() {
+		btnFechar.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseEntered(MouseEvent arg0) {
-						btnX.setCursor(new Cursor(Cursor.HAND_CURSOR));
+						btnFechar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 					}
 				});
-				btnX.addActionListener(new ActionListener() {
+		btnFechar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						System.exit(0);
 					}
 				});
 				
 				
-				btnX.setForeground(Color.WHITE);
-				btnX.setBackground(Color.RED);
-				btnX.setBounds(1002, 24, 85, 27);
-				top_fixed_panel.add(btnX);
+				btnFechar.setForeground(Color.WHITE);
+				btnFechar.setBackground(Color.RED);
+				btnFechar.setBounds(1002, 24, 85, 27);
+				top_fixed_panel.add(btnFechar);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.ORANGE);
