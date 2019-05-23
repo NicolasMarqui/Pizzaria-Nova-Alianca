@@ -261,7 +261,7 @@ public class Cliente {
 	}
 	
 	public void deletarCliente(int id) {
-		DB bd = new DB();
+		DB bd = new DB(); 
 		
 		if(bd.getConnection()) {
 			

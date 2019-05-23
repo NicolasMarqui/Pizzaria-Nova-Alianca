@@ -1,5 +1,9 @@
 package model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class PedidoProduto {
 	private int cod_produto;
 	private int cod_pedido;
@@ -40,4 +44,5 @@ public class PedidoProduto {
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
+	
 }
