@@ -1,5 +1,11 @@
 package model;
 
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
+import control.DB;
+
 public class Pedido {
 	private String tipo_pagamento;
 	private String data_pedido;
@@ -100,4 +106,36 @@ public class Pedido {
 		this.cod_pedido = cod_pedido;
 	}
 	
+	public boolean salvarPedido(double valor_pedido, String data_pedido, int cod_cliente, int cod_produto) {
+		DB bd = new DB();
+		
+		if(bd.getConnection()) {
+			
+			String sqlSalvarPedido = "INSERT INTO pedido(valor_pedido, data_pedido, cod_cliente, cod_produto) values(?, ? , ?, ?)";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(sqlSalvarPedido);
+				bd.st.setDouble(1,valor_pedido);
+				bd.st.setString(2,data_pedido);
+				bd.st.setInt(3,cod_cliente);
+				bd.st.setInt(4,cod_produto);
+				
+				bd.st.executeUpdate();
+				
+				//JOptionPane.showMessageDialog(null, "Pedido salvo com sucesso");
+				
+				return true;
+				
+			}catch(SQLException erro) {
+				JOptionPane.showMessageDialog(null, "Não foi possivel salvar o pedido, tente novamente mais tarde");
+				JOptionPane.showMessageDialog(null, erro.toString());
+				return false;
+			}finally {
+				bd.close();
+			}
+		}
+		
+		return false;
+	}
 }

@@ -33,6 +33,7 @@ import javax.swing.JScrollPane;
 import control.DB;
 import control.TableModel;
 import model.Cliente;
+import model.Pedido;
 import model.PedidoProduto;
 
 import java.awt.event.KeyAdapter;
@@ -45,7 +46,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import java.awt.List;
 
-public class Pedido extends JFrame {
+public class FazerPedido extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField clienteBusca;
@@ -55,6 +56,7 @@ public class Pedido extends JFrame {
 	private JTextField pesquisaProduto;
 	private JTable tableProduto;
 	private JTable tableProdutoFinal;
+	private JTextField fieldData;
 
 	/**
 	 * Launch the application.
@@ -63,7 +65,7 @@ public class Pedido extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Pedido frame = new Pedido();
+					FazerPedido frame = new FazerPedido();
 					frame.setVisible(true);
 					frame.setTitle("Venda");
 				} catch (Exception e) {
@@ -76,7 +78,7 @@ public class Pedido extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Pedido() {
+	public FazerPedido() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 737, 585);
 		contentPane = new JPanel();
@@ -155,9 +157,16 @@ public class Pedido extends JFrame {
 			}
 		});
 		
+		fieldData = new JTextField();
+        fieldData.setBounds(242, 164, 116, 20);
+        contentPane.add(fieldData);
+        fieldData.setColumns(10);
+		
 		 Date date = Calendar.getInstance().getTime();
 		 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
          String strDate = dateFormat.format(date);
+         
+         fieldData.setText(strDate);
          
          JLabel lblDataDoPedido = new JLabel("Data do pedido");
          lblDataDoPedido.setFont(new Font("Tahoma", Font.PLAIN, 19));
@@ -175,9 +184,7 @@ public class Pedido extends JFrame {
          contentPane.add(lblCdigoDoCliente);
 
          DateTimePicker dt = new DateTimePicker();
-         
-         //textData.setText(dt.toString());
-         getContentPane().add(dt);
+         contentPane.add(dt);
          
          textCliente = new JTextField();
          textCliente.setColumns(10);
@@ -317,22 +324,9 @@ public class Pedido extends JFrame {
               		
               		lblValorTotal.setText(Double.toString(novoValor));
          		}
-         		
-         		
-         		
-         		/*String codigo = tableProdutoFinal.getModel().getValueAt(tableProdutoFinal.getSelectedRow(), 0).toString();
-          		double valorAnterior = Double.parseDouble(lblValorTotal.getText());
-          		
-          		double novoValor = valorAnterior - Integer.parseInt(codigo);
-          		
-          		if(novoValor >= 0) {
-          			lblValorTotal.setText("0");
-          		}
-          		
-          		lblValorTotal.setText(Double.toString(novoValor));*/
          	}
          });
-         btnRemoverProduto.setBounds(48, 425, 116, 23);
+         btnRemoverProduto.setBounds(48, 425, 153, 23);
          contentPane.add(btnRemoverProduto);
          
          JLabel lblClientes = new JLabel("Clientes");
@@ -345,24 +339,35 @@ public class Pedido extends JFrame {
          lblProdutos.setBounds(419, 262, 103, 29);
          contentPane.add(lblProdutos);
          
-     
-           
-         
          btnFinalizar.addMouseListener(new MouseAdapter() {
  			@Override
  			public void mouseClicked(MouseEvent e) {
- 				/*if(codProduto.getText() == null || codCliente.getText().trim().isEmpty() || quantidadeProd.getText() == null || quantidadeProd.getText().trim().isEmpty()) {
- 					
- 					JOptionPane.showMessageDialog(null, "Preencha todos os campos");
- 					
- 					if(!checkDinheiro.isSelected() && !checkCartao.isSelected()) {
- 						JOptionPane.showMessageDialog(null, "Selecione um metodo de pagamento");
- 					}
- 					
- 					
+
+ 		         boolean mensagemProduto = false;
+ 				
+ 				if(textCliente.getText() == null || textCliente.getText().trim().isEmpty() || fieldData.getText() == null || fieldData.getText().trim().isEmpty() || tableProdutoFinal.getRowCount() == 0) {
+ 					JOptionPane.showMessageDialog(null, "Verifique se todos os campos estão preenchidos");				
  				}else {
  					
- 				}*/
+ 					Pedido ped = new Pedido();
+ 					
+ 					System.out.println(tableProdutoFinal.getRowCount());
+ 					
+ 					for(int i = 0; i < tableProdutoFinal.getRowCount();i++) {
+ 	          			//ped.salvarPedido( Double.parseDouble(lblValorTotal.getText()), fieldData.getText(), Integer.parseInt(textCliente.getText()),Integer.parseInt(modelProdFinal.getValueAt(i, 0).toString()));
+ 	          			
+ 	          			if(ped.salvarPedido( Double.parseDouble(lblValorTotal.getText()), fieldData.getText(), Integer.parseInt(textCliente.getText()),Integer.parseInt(modelProdFinal.getValueAt(i, 0).toString()))) {
+ 	          				mensagemProduto = true;
+ 	          				textCliente.setText("");
+ 	          				modelProdFinal.setNumRows(0);
+ 	          				
+ 	          			}else {
+ 	          				mensagemProduto = false;
+ 	          			}
+ 	          		}
+ 					
+ 					JOptionPane.showMessageDialog(null, mensagemProduto ? "Pedido feito com sucesso" : "Falha ao realizar o pedido");
+ 				}
  			}
  		});
          

@@ -461,11 +461,11 @@ public class DashBoard extends JFrame {
 		lblRelatrio.setBounds(75, 271, 112, 16);
 		side_nav.add(lblRelatrio);
 		
-		JLabel lblVenda = new JLabel("Venda");
+		JLabel lblVenda = new JLabel("Novo Pedido");
 		lblVenda.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Pedido venda = new Pedido();
+				FazerPedido venda = new FazerPedido();
 				
 				venda.setVisible(true);
 				venda.setLocationRelativeTo(null);
@@ -480,7 +480,7 @@ public class DashBoard extends JFrame {
 		lblVenda.setForeground(Color.WHITE);
 		lblVenda.setBackground(Color.WHITE);
 		lblVenda.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblVenda.setBounds(75, 317, 56, 16);
+		lblVenda.setBounds(75, 363, 132, 16);
 		side_nav.add(lblVenda);
 		
 	
@@ -548,8 +548,31 @@ public class DashBoard extends JFrame {
 		});
 		lblEditarClientes.setForeground(Color.WHITE);
 		lblEditarClientes.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblEditarClientes.setBounds(75, 356, 132, 28);
+		lblEditarClientes.setBounds(75, 310, 132, 28);
 		side_nav.add(lblEditarClientes);
+		
+		JLabel lblFinalizarCompra = new JLabel("Finalizar Compra");
+		lblFinalizarCompra.setForeground(Color.WHITE);
+		lblFinalizarCompra.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblFinalizarCompra.setBackground(Color.WHITE);
+		lblFinalizarCompra.setBounds(75, 408, 132, 16);
+		side_nav.add(lblFinalizarCompra);
+		
+		lblFinalizarCompra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				FinalizarCompra compra = new FinalizarCompra();
+				
+				compra.setVisible(true);
+				compra.setLocationRelativeTo(null);
+				compra.setResizable(false);
+				
+			}
+			
+			public void mouseEntered(MouseEvent e) {
+				lblFinalizarCompra.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
 		
 		/* PAINEL FIXO CIMA */
 		
