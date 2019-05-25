@@ -198,7 +198,7 @@ public class Cliente {
 			
 		if(bd.getConnection()) {
 			
-			String sqlSalvarProd = "INSERT INTO clientes(nome,cpf,cidade,rua,bairro,numero,cep,telefone) values(?, ? , ?, ? , ? , ?, ?, ?)";
+			String sqlSalvarProd = "INSERT INTO cliente(NOME_CLIENTE,cpf,cidade,rua,bairro,numero,cep,telefone) values(?, ? , ?, ? , ? , ?, ?, ?)";
 			
 			try{
 				
@@ -231,7 +231,7 @@ public class Cliente {
 		
 		if(bd.getConnection()) {
 			
-			String sqlAtualizarProd = "UPDATE clientes SET nome = ? , cpf = ? , cidade = ? , rua = ? , bairro = ? , numero = ?  , cep = ? , telefone = ? WHERE codigoCliente = ?";
+			String sqlAtualizarProd = "UPDATE cliente SET NOME_CLIENTE = ? , cpf = ? , cidade = ? , rua = ? , bairro = ? , numero = ?  , cep = ? , telefone = ? WHERE COD_CLIENTE = ?";
 			
 			try{
 				
@@ -265,7 +265,7 @@ public class Cliente {
 		
 		if(bd.getConnection()) {
 			
-			String sqlDeletarCliente = "DELETE FROM clientes WHERE codigoCliente = ?";
+			String sqlDeletarCliente = "DELETE FROM cliente WHERE COD_CLIENTE = ?";
 			
 			try{
 				

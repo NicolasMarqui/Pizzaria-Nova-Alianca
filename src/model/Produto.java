@@ -80,7 +80,7 @@ public class Produto {
 			
 		if(bd.getConnection()) {
 			
-			String sqlSalvarProd = "INSERT INTO produtos(nome,tipo,valor_unitario) values(?, ? , ?)";
+			String sqlSalvarProd = "INSERT INTO produto(nome,tipo,valor_unitario) values(?, ? , ?)";
 			
 			try{
 				

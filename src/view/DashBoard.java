@@ -185,9 +185,7 @@ public class DashBoard extends JFrame {
 		if(bd.getConnection()) {
 					
 			try {
-				
-				
-				model = TableModel.getModel(bd, "SELECT * FROM produtos");
+				model = TableModel.getModel(bd, "SELECT * FROM produto");
 				tableProd.setModel(model);
 				System.out.println(model);
 				//JScrollPane sp1 = new JScrollPane(tableProd);
@@ -467,7 +465,7 @@ public class DashBoard extends JFrame {
 		lblVenda.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				NovaVenda venda = new NovaVenda();
+				Pedido venda = new Pedido();
 				
 				venda.setVisible(true);
 				venda.setLocationRelativeTo(null);

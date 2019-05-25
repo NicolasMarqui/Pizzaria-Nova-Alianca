@@ -18,7 +18,7 @@ public class DB {
 	
 	private final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	
-	private final String DATABASE = "testeAlianca";
+	private final String DATABASE = "final";
 	private final String URL = "jdbc:sqlserver://localhost:1433;DatabaseName=" + DATABASE;
 	
 	public boolean getConnection() {

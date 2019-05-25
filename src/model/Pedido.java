@@ -1,6 +1,7 @@
 package model;
 
 public class Pedido {
+	private String tipo_pagamento;
 	private String data_pedido;
 	private boolean valor_pedido;
 	private int cod_cliente;
@@ -98,6 +99,5 @@ public class Pedido {
 	public void setCod_pedido(int cod_pedido) {
 		this.cod_pedido = cod_pedido;
 	}
-	
 	
 }

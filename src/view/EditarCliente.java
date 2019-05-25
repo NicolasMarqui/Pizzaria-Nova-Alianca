@@ -188,7 +188,7 @@ public class EditarCliente extends JFrame {
 		seachCliente = new JTextField();
 		DB bd = new DB();
 		bd.getConnection();
-		model = TableModel.getModel(bd,"SELECT * FROM clientes");
+		model = TableModel.getModel(bd,"SELECT * FROM cliente");
 		table = new JTable(model);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -215,7 +215,7 @@ public class EditarCliente extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				
 				if(bd.getConnection()) {
-					String sql = "SELECT * FROM clientes WHERE nome LIKE ?";
+					String sql = "SELECT * FROM cliente WHERE nome LIKE ?";
 					
 					try {
 						bd.st = bd.con.prepareStatement(sql);
