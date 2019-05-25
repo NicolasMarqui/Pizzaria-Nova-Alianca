@@ -189,7 +189,6 @@ public class Cliente {
 	 */
 	public void setCodigoCliente(int codigoCliente) {
 		this.codigoCliente = codigoCliente;
-		
 		System.out.println("Cod é " + this.codigoCliente);
 	}
 	

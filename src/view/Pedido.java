@@ -24,9 +24,12 @@ import java.util.Date;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+
 import control.DB;
 import control.TableModel;
 import model.Cliente;
@@ -75,7 +78,7 @@ public class Pedido extends JFrame {
 	 */
 	public Pedido() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 1067, 585);
+		setBounds(100, 100, 737, 585);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -87,20 +90,20 @@ public class Pedido extends JFrame {
 		contentPane.add(lblVenda);
 		
 		clienteBusca = new JTextField();		
-		clienteBusca.setBounds(534, 125, 148, 20);
+		clienteBusca.setBounds(534, 74, 148, 20);
 		contentPane.add(clienteBusca);
 		clienteBusca.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Pesquisa");
-		btnNewButton.setBounds(589, 151, 93, 23);
+		btnNewButton.setBounds(589, 105, 93, 23);
 		contentPane.add(btnNewButton);
 		
 		table = new JTable();
-		table.setBounds(464, 185, 218, 91);
+		table.setBounds(419, 134, 263, 91);
 		contentPane.add(table);
 		
 		JButton btnFinalizar = new JButton("Finalizar");
-		btnFinalizar.setBounds(259, 475, 137, 39);
+		btnFinalizar.setBounds(545, 461, 137, 39);
 		contentPane.add(btnFinalizar);
 		
 		ButtonGroup group = new ButtonGroup();
@@ -163,7 +166,7 @@ public class Pedido extends JFrame {
          
          JLabel lblValor = new JLabel("Valor");
          lblValor.setFont(new Font("Tahoma", Font.PLAIN, 19));
-         lblValor.setBounds(48, 425, 69, 29);
+         lblValor.setBounds(48, 471, 69, 29);
          contentPane.add(lblValor);
          
          JLabel lblCdigoDoCliente = new JLabel("C\u00F3digo do Cliente");
@@ -178,20 +181,20 @@ public class Pedido extends JFrame {
          
          textCliente = new JTextField();
          textCliente.setColumns(10);
-         textCliente.setBounds(293, 203, 116, 22);
+         textCliente.setBounds(242, 203, 116, 22);
          contentPane.add(textCliente);
          
          pesquisaProduto = new JTextField();
          pesquisaProduto.setColumns(10);
-         pesquisaProduto.setBounds(844, 125, 148, 20);
+         pesquisaProduto.setBounds(534, 239, 148, 20);
          contentPane.add(pesquisaProduto);
          
          JButton searchProduto = new JButton("Pesquisa");
-         searchProduto.setBounds(899, 156, 93, 23);
+         searchProduto.setBounds(589, 268, 93, 23);
          contentPane.add(searchProduto);
          
          tableProduto = new JTable();         
-         tableProduto.setBounds(727, 185, 265, 92);
+         tableProduto.setBounds(417, 302, 265, 112);
          contentPane.add(tableProduto);
          
          if(bd.getConnection()) {
@@ -244,13 +247,18 @@ public class Pedido extends JFrame {
          
          JLabel lblValorTotal = new JLabel("0.00");
          lblValorTotal.setFont(new Font("Tahoma", Font.PLAIN, 26));
-         lblValorTotal.setBounds(334, 421, 75, 33);
+         lblValorTotal.setBounds(333, 467, 75, 33);
          contentPane.add(lblValorTotal);
          
          DefaultTableModel modelProdFinal = new DefaultTableModel(); 
          tableProdutoFinal = new JTable(modelProdFinal);
-         tableProdutoFinal.setBounds(48, 285, 346, 111);
+         tableProdutoFinal.setBounds(50, 303, 346, 111);
+         
+//         JScrollPane sp = new JScrollPane(tableProdutoFinal);
+//         contentPane.add(sp, BorderLayout.CENTER);
+         
          contentPane.add(tableProdutoFinal);
+        
          
          modelProdFinal.addColumn("Código");
          modelProdFinal.addColumn("Nome");
@@ -280,12 +288,62 @@ public class Pedido extends JFrame {
 
           	}
           });
+         
 
          
          JLabel lblR = new JLabel("R$");
          lblR.setFont(new Font("Tahoma", Font.PLAIN, 19));
-         lblR.setBounds(259, 425, 49, 29);
+         lblR.setBounds(258, 471, 49, 29);
          contentPane.add(lblR);
+         
+         JButton btnRemoverProduto = new JButton("Remover Produto");
+         btnRemoverProduto.addMouseListener(new MouseAdapter() {
+         	@Override
+         	public void mouseClicked(MouseEvent arg0) {
+         		
+         		if(modelProdFinal.getRowCount() > -1) {
+         			modelProdFinal.removeRow(tableProdutoFinal.getSelectedRow());
+         		}
+         		
+         		if(modelProdFinal.getRowCount() != -1) {
+         			String codigo = modelProdFinal.getValueAt(tableProdutoFinal.getSelectedRow(), 0).toString();
+              		double valorAnterior = Double.parseDouble(lblValorTotal.getText());
+              		
+              		double novoValor = valorAnterior - Integer.parseInt(codigo);
+              		
+              		if(novoValor >= 0) {
+              			lblValorTotal.setText("0");
+              		}
+              		
+              		lblValorTotal.setText(Double.toString(novoValor));
+         		}
+         		
+         		
+         		
+         		/*String codigo = tableProdutoFinal.getModel().getValueAt(tableProdutoFinal.getSelectedRow(), 0).toString();
+          		double valorAnterior = Double.parseDouble(lblValorTotal.getText());
+          		
+          		double novoValor = valorAnterior - Integer.parseInt(codigo);
+          		
+          		if(novoValor >= 0) {
+          			lblValorTotal.setText("0");
+          		}
+          		
+          		lblValorTotal.setText(Double.toString(novoValor));*/
+         	}
+         });
+         btnRemoverProduto.setBounds(48, 425, 116, 23);
+         contentPane.add(btnRemoverProduto);
+         
+         JLabel lblClientes = new JLabel("Clientes");
+         lblClientes.setFont(new Font("Tahoma", Font.PLAIN, 19));
+         lblClientes.setBounds(419, 98, 69, 29);
+         contentPane.add(lblClientes);
+         
+         JLabel lblProdutos = new JLabel("Produtos");
+         lblProdutos.setFont(new Font("Tahoma", Font.PLAIN, 19));
+         lblProdutos.setBounds(419, 262, 103, 29);
+         contentPane.add(lblProdutos);
          
      
            
