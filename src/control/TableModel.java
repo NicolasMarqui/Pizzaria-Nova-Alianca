@@ -48,7 +48,10 @@ public class TableModel
 						linhaAtual.addElement(""+df.format(bd.rs.getDouble(i)));break;
 					case Types.SMALLINT:
 						linhaAtual.addElement(""+bd.rs.getInt(i));break;
-	//					default:System.out.println(rsmd.getColumnType(i));   
+					case Types.DECIMAL:
+						linhaAtual.addElement(""+bd.rs.getDouble(i));break;
+
+						//					default:System.out.println(rsmd.getColumnType(i));   
 					}
 				}
 				linhas.addElement(linhaAtual);     

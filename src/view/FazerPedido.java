@@ -288,7 +288,7 @@ public class FazerPedido extends JFrame {
           		double soma = 0;
           		
           		for(int i = 0; i < rowCount  ;i++) {
-          			soma += Integer.parseInt(tableProdutoFinal.getValueAt(i, 0).toString());
+          			soma += Integer.parseInt(tableProdutoFinal.getValueAt(i, 2).toString());
           		}
           		
           		lblValorTotal.setText(Double.toString(soma));

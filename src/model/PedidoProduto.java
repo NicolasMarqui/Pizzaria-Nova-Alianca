@@ -1,8 +1,13 @@
 package model;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.swing.JOptionPane;
+
+import control.DB;
 
 public class PedidoProduto {
 	private int cod_produto;
@@ -43,6 +48,31 @@ public class PedidoProduto {
 	 */
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
+	}
+	
+	public void todosPedidosCliente(int id) {
+		DB bd = new DB();
+		
+		if(bd.getConnection()) {
+			
+			String sqlMostrarPedido = "SELECT PED.COD_PEDIDO, PED.COD_CLIENTE, PED.COD_PRODUTO , PED.VALOR_PEDIDO , P.NOME, P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE = ? AND C.COD_CLIENTE = PED.COD_CLIENTE AND P.COD_PRODUTO = PED.COD_PRODUTO";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(sqlMostrarPedido);
+				bd.st.setInt(1,id);
+				
+				bd.st.executeUpdate();
+				
+				//JOptionPane.showMessageDialog(null, "Pedido salvo com sucesso");
+							
+			}catch(SQLException erro) {
+				JOptionPane.showMessageDialog(null, "Não foi possivel carregar os pedidos, tente novamente mais tarde");
+				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+		}
 	}
 	
 }
