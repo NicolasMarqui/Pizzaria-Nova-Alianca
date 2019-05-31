@@ -23,8 +23,13 @@ import javax.swing.JRadioButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FinalizarCompra extends JFrame {
 
@@ -137,48 +142,92 @@ public class FinalizarCompra extends JFrame {
 		btnProcurarPedidos.setBounds(424, 127, 133, 23);
 		contentPane.add(btnProcurarPedidos);
 		
+		JLabel labelCodCliente = new JLabel("New label");
+		labelCodCliente.setBounds(749, 11, 46, 14);
+		contentPane.add(labelCodCliente);
+		
 		DB bd = new DB();
 		PedidoProduto ped = new PedidoProduto();
 
 		btnProcurarPedidos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				labelCodCliente.setText(codigoClienteFinalizar.getText());
 				((DefaultTableModel) tableConfirmaProduto.getModel()).setNumRows(0);
+				
 				if(bd.getConnection()) {
 					
 					DefaultTableModel modelFinal = (DefaultTableModel) tableConfirmaProduto.getModel();
-					String sqlMostrarPedido = "SELECT PED.COD_PEDIDO, PED.COD_CLIENTE, PED.COD_PRODUTO , PED.VALOR_PEDIDO , P.NOME, P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE = ? AND C.COD_CLIENTE = PED.COD_CLIENTE AND P.COD_PRODUTO = PED.COD_PRODUTO";
+					String sqlMostrarPedido = "SELECT P.NOME,P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE='" +  Integer.parseInt(labelCodCliente.getText()) +"' AND C.COD_CLIENTE=PED.COD_CLIENTE AND P.COD_PRODUTO=PED.COD_PRODUTO";
+					//String sqlMostrarPedido = "SELECT * FROM PRODUTO P WHERE EXISTS (SELECT * FROM PEDIDO PE WHERE P.COD_PRODUTO = PE.COD_PRODUTO AND PE.COD_CLIENTE = ?) ";
 					
-		 			try {
+					try {
+						
+						model = TableModel.getModel(bd, sqlMostrarPedido );
+		 				tableConfirmaProduto.setModel(model);
+		 				codigoClienteFinalizar.setText("");
+						labelCodCliente.setText("");
+		 				
+					}catch(IllegalArgumentException erro) {
+						JOptionPane.showMessageDialog(null, "Não foi possivel achar nenhum produto");
+						codigoClienteFinalizar.setText("");
+						labelCodCliente.setText("");
+					}
+					
+					model = TableModel.getModel(bd, sqlMostrarPedido );
+	 				tableConfirmaProduto.setModel(model);
+					
+		 			/*try {
 		 				
 		 				bd.st = bd.con.prepareStatement(sqlMostrarPedido);
-						bd.st.setInt(1,Integer.parseInt(codigoClienteFinalizar.getText() ));
+		 				
+		 				if(codigoClienteFinalizar.getText() != null || codigoClienteFinalizar.getText() != "") {
+		 					bd.st.setInt(1, Integer.parseInt(labelCodCliente.getText()));
+		 				}else {
+		 					bd.st.setInt(1, 2);
+		 				}
+
+		 				
+		 				//codigoClienteFinalizar.setText("");
 						
 						bd.rs = bd.st.executeQuery();
 						
-						if(!bd.rs.next()) {
+						if(bd.rs.next()) {
+							do {
+								String nome = bd.rs.getString("nome");
+								double preco = bd.rs.getDouble("valor_unitario");
+								
+								modelFinal.addRow(new Object[]{nome,preco});
+							}while(bd.rs.next());
+							
+							//codigoClienteFinalizar.setText("");
+							
+						}else {
 							JOptionPane.showMessageDialog(null, "Nenhum produto cadastrado para esse cliente");
+							codigoClienteFinalizar.setText("");
 						}
 						
-						while(bd.rs.next()) {
-							
-							int id = bd.rs.getInt("cod_produto");
-							String nome = bd.rs.getString("nome");
-							double preco = bd.rs.getDouble("valor_unitario");
-							
-							modelFinal.addRow(new Object[]{id,nome,preco});
-						}
 		 				
-		 				model = TableModel.getModel(bd, sqlMostrarPedido );
-		 				tableConfirmaProduto.setModel(model);
+		 				
 		 				
 		 			}catch(IllegalArgumentException erro) {					
 		 				JOptionPane.showMessageDialog(null, erro.getMessage().toString());
+		 				erro.printStackTrace();
 		 			} catch (SQLException e) {
 						JOptionPane.showMessageDialog(null, e.getMessage().toString());
 					}finally {
 		 				bd.close();
-		 			}
+		 			}*/
+	 				
+	 				int count= tableConfirmaProduto.getModel().getRowCount();
+	 				double valorFinal = 0;
+	 				
+	 				if(count > 0) {
+	 					for(int i = 0;i < count;i++) {
+	 						valorFinal += Double.parseDouble(tableConfirmaProduto.getModel().getValueAt(i, 1).toString());
+	 						labelValorFinal.setText(Double.toString(valorFinal));
+	 					}
+	 				}
 		 		}
 			}
 		});
