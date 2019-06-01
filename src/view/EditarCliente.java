@@ -194,15 +194,19 @@ public class EditarCliente extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				int row = table.getSelectedRow();
-				Id.setText(table.getModel().getValueAt(row, 0).toString());
-				editarNomeCliente.setText(table.getModel().getValueAt(row, 1).toString());
-				editarCPFCliente.setText(table.getModel().getValueAt(row, 2).toString());
-				editarCidadeCliente.setText(table.getModel().getValueAt(row, 3).toString());
-				editarRuaCliente.setText(table.getModel().getValueAt(row, 4).toString());
-				editarBairroCliente.setText(table.getModel().getValueAt(row, 5).toString());
-				editarNumeroCliente.setText(table.getModel().getValueAt(row, 6).toString());
-				editarCEPCliente.setText(table.getModel().getValueAt(row, 7).toString());
-				editarTelefoneCliente.setText(table.getModel().getValueAt(row, 8).toString());
+				try {
+					Id.setText(table.getModel().getValueAt(row, 0).toString());
+					editarNomeCliente.setText(table.getModel().getValueAt(row, 1).toString());
+					editarCPFCliente.setText(table.getModel().getValueAt(row, 2).toString());
+					editarCidadeCliente.setText(table.getModel().getValueAt(row, 3).toString());
+					editarRuaCliente.setText(table.getModel().getValueAt(row, 4).toString());
+					editarBairroCliente.setText(table.getModel().getValueAt(row, 5).toString());
+					editarNumeroCliente.setText(table.getModel().getValueAt(row, 6).toString());
+					editarCEPCliente.setText(table.getModel().getValueAt(row, 7).toString());
+					editarTelefoneCliente.setText(table.getModel().getValueAt(row, 8).toString());
+				}catch(ArrayIndexOutOfBoundsException arr) {
+					
+				}
 			}
 		});
 		table.setBounds(21, 54, 851, 111);

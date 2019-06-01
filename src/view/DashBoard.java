@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.*;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -9,15 +8,13 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
@@ -35,7 +32,7 @@ import javax.swing.JTextField;
 import model.*;
 import control.*;
 import javax.swing.JTable;
-import control.Masks;
+import javax.swing.JComboBox;
 
 
 public class DashBoard extends JFrame {
@@ -56,6 +53,7 @@ public class DashBoard extends JFrame {
 	private JTable tableProdutos;
 	private DefaultTableModel model;
 	private JTable tableProd;
+	private JTable tablePrincipal;
 
 	/**
 	 * Launch the application.
@@ -394,11 +392,78 @@ public class DashBoard extends JFrame {
 		cadas_clientes_panel.add(btnCadastrar);
 		
 		JPanel relatorio = new JPanel();
+		relatorio.setBackground(Color.LIGHT_GRAY);
 		card_panel.add(relatorio, "relatorio_panel");
+		relatorio.setLayout(null);
 		
-		JLabel lblNewLabel_3 = new JLabel("Relatorio");
+		JLabel lblNewLabel_3 = new JLabel("Relat\u00F3rio");
+		lblNewLabel_3.setForeground(Color.BLACK);
+		lblNewLabel_3.setBounds(505, 22, 118, 37);
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		relatorio.add(lblNewLabel_3);
+		
+		tablePrincipal = new JTable();
+		tablePrincipal.setBounds(71, 124, 987, 480);
+		
+		JScrollPane scrollPane = new JScrollPane(tablePrincipal);
+		scrollPane.setBounds(71, 124, 987, 480);
+		tablePrincipal.setFillsViewportHeight(true);
+		
+		relatorio.add(scrollPane);
+		
+		JTableHeader headerPrincipal = tablePrincipal.getTableHeader();
+		headerPrincipal.setBackground(Color.red);
+		headerPrincipal.setForeground(Color.white);
+		headerPrincipal.setFont(new Font("Tahome", Font.ITALIC, 18));
+		((DefaultTableCellRenderer)headerPrincipal.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
+		headerPrincipal.setPreferredSize(new Dimension(40, 40));
+		
+		tablePrincipal.setFont(new Font("Tahome", Font.ITALIC, 15));
+		tablePrincipal.setRowHeight(25);
+		
+		
+		JButton btnExportar = new JButton("Exportar");
+		btnExportar.setBounds(920, 615, 138, 44);
+		relatorio.add(btnExportar);
+		
+		JComboBox comboDataPedido = new JComboBox();
+		comboDataPedido.setBounds(71, 85, 118, 28);
+		relatorio.add(comboDataPedido);
+		
+		JButton btnClienteMaisCompra = new JButton("Cliente + compra");
+		btnClienteMaisCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(bd.getConnection()) {
+					String sql = "SELECT COD_CLIENTE , COUNT(COD_CLIENTE ) as Total_Pedidos FROM PEDIDO GROUP BY COD_CLIENTE";
+					
+					try {
+						model = TableModel.getModel(bd, sql);
+						tablePrincipal.setModel(model);
+						
+					}catch(IllegalArgumentException erro) {					
+						JOptionPane.showMessageDialog(null, erro.toString());
+					}finally {
+						bd.close();
+					}
+				}
+			}
+		});
+		btnClienteMaisCompra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+			}
+		});
+		btnClienteMaisCompra.setBounds(920, 88, 138, 23);
+		relatorio.add(btnClienteMaisCompra);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(199, 85, 125, 28);
+		relatorio.add(comboBox);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(334, 85, 125, 28);
+		relatorio.add(comboBox_1);
 		
 		JPanel panel_venda = new JPanel();
 		panel_venda.addMouseListener(new MouseAdapter() {
@@ -622,7 +687,75 @@ public class DashBoard extends JFrame {
 		/* FIM DO PAINEL FIXO */
 
 		//END OF SIDE MENU
+		
+		
+		/* COMEÇO RELATORIO */
+		
+		//relatorio.add(new JScrollPane(tablePrincipal));
+		
+		if(bd.getConnection()) {
+			String sql = "SELECT * FROM PEDIDO";
+			
+			try {
+				model = TableModel.getModel(bd, sql);
+				tablePrincipal.setModel(model);
+				
+			}catch(IllegalArgumentException erro) {					
+				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/* FIM RELATORIO */
+		
 	}
-	
 }
 
