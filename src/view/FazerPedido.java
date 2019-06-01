@@ -102,7 +102,11 @@ public class FazerPedido extends JFrame {
 		
 		table = new JTable();
 		table.setBounds(419, 134, 263, 91);
-		contentPane.add(table);
+		
+		JScrollPane scrollClientes = new JScrollPane(table);
+		scrollClientes.setBounds(419, 134, 263, 91);
+		
+		contentPane.add(scrollClientes);
 		
 		JButton btnFinalizar = new JButton("Finalizar");
 		btnFinalizar.setBounds(545, 461, 137, 39);
@@ -202,7 +206,11 @@ public class FazerPedido extends JFrame {
          
          tableProduto = new JTable();         
          tableProduto.setBounds(417, 302, 265, 112);
-         contentPane.add(tableProduto);
+         
+         JScrollPane scrollProdutos = new JScrollPane(tableProduto);
+         scrollProdutos.setBounds(417, 302, 265, 112);
+         
+         contentPane.add(scrollProdutos);
          
          if(bd.getConnection()) {
  			String sql = "SELECT cod_produto, nome, valor_unitario FROM produto ";
@@ -258,10 +266,10 @@ public class FazerPedido extends JFrame {
          tableProdutoFinal = new JTable(modelProdFinal);
          tableProdutoFinal.setBounds(50, 303, 346, 111);
          
-//         JScrollPane sp = new JScrollPane(tableProdutoFinal);
-//         contentPane.add(sp, BorderLayout.CENTER);
+         JScrollPane scrollFinal = new JScrollPane(tableProdutoFinal);
+         scrollFinal.setBounds(50, 303, 346, 111);
          
-         contentPane.add(tableProdutoFinal);
+         contentPane.add(scrollFinal);
         
          
          modelProdFinal.addColumn("Código");

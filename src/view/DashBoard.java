@@ -18,7 +18,11 @@ import javax.swing.JOptionPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -108,13 +112,25 @@ public class DashBoard extends JFrame {
 		home_panel.setForeground(Color.WHITE);
 		home_panel.setLayout(null);
 		JLabel logo_label = new JLabel(logo, SwingConstants.CENTER);
-		logo_label.setBounds(275, 44, 613, 194);
+		logo_label.setBackground(Color.WHITE);
+		logo_label.setBounds(269, 142, 613, 194);
 		home_panel.add(logo_label);
 		card_panel.add(home_panel, "name_92972993277223");
 		home_panel.setBackground(new Color(255, 255, 255));
 		
 		JPanel panelVendas = new JPanel();
-		panelVendas.setBounds(84, 324, 268, 199);
+		panelVendas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panelVendas.setBackground(Color.LIGHT_GRAY);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panelVendas.setBackground(new Color(240,240,240));
+			}
+		});
+		panelVendas.setBounds(74, 466, 268, 199);
+		panelVendas.setForeground(Color.WHITE);
 		home_panel.add(panelVendas);
 		panelVendas.setLayout(null);
 		
@@ -131,9 +147,20 @@ public class DashBoard extends JFrame {
 		panelVendas.add(lblProdutos);
 		
 		JPanel panelProdutos = new JPanel();
-		panelProdutos.setBounds(399, 324, 268, 199);
+		panelProdutos.setBounds(437, 466, 268, 199);
 		home_panel.add(panelProdutos);
 		panelProdutos.setLayout(null);
+		
+		panelProdutos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panelProdutos.setBackground(Color.LIGHT_GRAY);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panelProdutos.setBackground(new Color(240,240,240));
+			}
+		});
 		
 		Produto prod = new Produto();
 		
@@ -147,10 +174,21 @@ public class DashBoard extends JFrame {
 		label_2.setBounds(109, 152, 75, 14);
 		panelProdutos.add(label_2);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(733, 324, 268, 199);
-		home_panel.add(panel_1);
-		panel_1.setLayout(null);
+		JPanel panelClientesTotal = new JPanel();
+		panelClientesTotal.setBounds(788, 466, 268, 199);
+		home_panel.add(panelClientesTotal);
+		panelClientesTotal.setLayout(null);
+		
+		panelClientesTotal.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panelClientesTotal.setBackground(Color.LIGHT_GRAY);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panelClientesTotal.setBackground(new Color(240,240,240));
+			}
+		});
 		
 		Cliente cli = new Cliente();
 		
@@ -158,12 +196,12 @@ public class DashBoard extends JFrame {
 		System.out.println(Integer.toString(cli.quantidadeCliente()));
 		labelTotalClientes.setHorizontalAlignment(SwingConstants.CENTER);
 		labelTotalClientes.setFont(new Font("Dialog", Font.BOLD, 36));
-		labelTotalClientes.setBounds(66, 44, 143, 106);
-		panel_1.add(labelTotalClientes);
+		labelTotalClientes.setBounds(66, 36, 143, 106);
+		panelClientesTotal.add(labelTotalClientes);
 		
 		JLabel lblClientes = new JLabel("Clientes");
 		lblClientes.setBounds(120, 153, 70, 14);
-		panel_1.add(lblClientes);
+		panelClientesTotal.add(lblClientes);
 		
 		JPanel cadastro_panel = new JPanel();
 		card_panel.add(cadastro_panel, "name_94484432854786");
@@ -225,7 +263,11 @@ public class DashBoard extends JFrame {
 		nomeProduto.setColumns(10);
 		tableProd = new JTable();
 		tableProd.setBounds(467, 153, 622, 200);
-		cadas_prod_panel.add(tableProd);
+		
+		JScrollPane scrollProdutos = new JScrollPane(tableProd);
+		scrollProdutos.setBounds(467, 153, 622, 200);
+		
+		cadas_prod_panel.add(scrollProdutos);
 		
 		
 		
@@ -538,7 +580,7 @@ public class DashBoard extends JFrame {
 		
 		JPanel side_nav = new JPanel();
 		side_nav.setForeground(Color.WHITE);
-		side_nav.setBackground(new Color(171, 0, 0));
+		side_nav.setBackground(new Color(199, 42, 27));
 		side_nav.setBounds(0, 0, 266, 785);
 		contentPane.add(side_nav);
 		side_nav.setLayout(null);
@@ -546,14 +588,9 @@ public class DashBoard extends JFrame {
 		/* DECORATORS */
 		
 		JPanel square_top1 = new JPanel();
-		square_top1.setBackground(new Color(198, 244, 100));
-		square_top1.setBounds(52, 0, 112, 36);
+		square_top1.setBackground(new Color(22, 108, 38));
+		square_top1.setBounds(0, 738, 266, 47);
 		side_nav.add(square_top1);
-		
-		JPanel square_top2 = new JPanel();
-		square_top2.setBackground(Color.ORANGE);
-		square_top2.setBounds(0, 0, 54, 101);
-		side_nav.add(square_top2);
 		
 		
 		/* END OF DECORATORS */
@@ -568,14 +605,20 @@ public class DashBoard extends JFrame {
 				fixedLabelText = "Relatorio";
 			}
 			
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				lblRelatrio.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				lblRelatrio.setFont(new Font("Tahoma", Font.PLAIN, 22));
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				lblRelatrio.setFont(new Font("Tahoma", Font.PLAIN, 17));
 			}
 		});
 		lblRelatrio.setForeground(Color.WHITE);
 		lblRelatrio.setBackground(Color.WHITE);
 		lblRelatrio.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblRelatrio.setBounds(75, 271, 112, 16);
+		lblRelatrio.setBounds(75, 271, 181, 16);
 		side_nav.add(lblRelatrio);
 		
 		JLabel lblVenda = new JLabel("Novo Pedido");
@@ -590,14 +633,20 @@ public class DashBoard extends JFrame {
 				
 			}
 			
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				lblVenda.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				lblVenda.setFont(new Font("Tahoma", Font.PLAIN, 22));
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				lblVenda.setFont(new Font("Tahoma", Font.PLAIN, 17));
 			}
 		});
 		lblVenda.setForeground(Color.WHITE);
 		lblVenda.setBackground(Color.WHITE);
 		lblVenda.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblVenda.setBounds(75, 363, 132, 16);
+		lblVenda.setBounds(75, 363, 181, 16);
 		side_nav.add(lblVenda);
 		
 	
@@ -617,10 +666,15 @@ public class DashBoard extends JFrame {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				lblInfo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				lblInfo.setFont(new Font("Tahoma", Font.PLAIN, 22));
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				lblInfo.setFont(new Font("Tahoma", Font.PLAIN, 17));
 			}
 		});
 		lblInfo.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblInfo.setBounds(75, 227, 89, 16);
+		lblInfo.setBounds(75, 227, 181, 16);
 		side_nav.add(lblInfo);
 		
 		
@@ -644,9 +698,14 @@ public class DashBoard extends JFrame {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				lblNewLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 			}
 		});
-		lblNewLabel.setBounds(75, 13, 43, 21);
+		lblNewLabel.setBounds(75, 13, 181, 21);
 		bg_home.add(lblNewLabel);
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setBackground(Color.BLACK);
@@ -662,18 +721,47 @@ public class DashBoard extends JFrame {
 				editar.setResizable(false);
 				lblEditarClientes.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblEditarClientes.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				lblEditarClientes.setFont(new Font("Tahoma", Font.PLAIN, 22));
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				lblEditarClientes.setFont(new Font("Tahoma", Font.PLAIN, 17));
+			}
 		});
 		lblEditarClientes.setForeground(Color.WHITE);
 		lblEditarClientes.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblEditarClientes.setBounds(75, 310, 132, 28);
+		lblEditarClientes.setBounds(75, 310, 181, 28);
 		side_nav.add(lblEditarClientes);
 		
 		JLabel lblFinalizarCompra = new JLabel("Finalizar Compra");
 		lblFinalizarCompra.setForeground(Color.WHITE);
 		lblFinalizarCompra.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblFinalizarCompra.setBackground(Color.WHITE);
-		lblFinalizarCompra.setBounds(75, 408, 132, 16);
+		lblFinalizarCompra.setBounds(75, 408, 181, 28);
 		side_nav.add(lblFinalizarCompra);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(22, 108, 38));
+		panel_2.setBounds(0, 0, 266, 64);
+		side_nav.add(panel_2);
+		panel_2.setLayout(null);
+		
+		JLabel lblData = new JLabel("Data");
+		lblData.setForeground(Color.WHITE);
+		lblData.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblData.setHorizontalAlignment(SwingConstants.CENTER);
+		lblData.setBounds(0, 0, 266, 64);
+		panel_2.add(lblData);
+		
+		Date date = Calendar.getInstance().getTime();
+		 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
+        String strDate = dateFormat.format(date);
+        
+        lblData.setText(strDate);
 		
 		lblFinalizarCompra.addMouseListener(new MouseAdapter() {
 			@Override
@@ -685,16 +773,21 @@ public class DashBoard extends JFrame {
 				compra.setResizable(false);
 				
 			}
-			
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				lblFinalizarCompra.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				lblFinalizarCompra.setFont(new Font("Tahoma", Font.PLAIN, 22));
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				lblFinalizarCompra.setFont(new Font("Tahoma", Font.PLAIN, 17));
 			}
 		});
 		
 		/* PAINEL FIXO CIMA */
 		
 		JPanel top_fixed_panel = new JPanel();
-		top_fixed_panel.setBackground(new Color(196, 77, 88));
+		top_fixed_panel.setBackground(new Color(199, 42, 27));
 		top_fixed_panel.setBounds(264, 0, 1130, 64);
 		contentPane.add(top_fixed_panel);
 		top_fixed_panel.setLayout(null);
@@ -717,18 +810,18 @@ public class DashBoard extends JFrame {
 				
 				btnFechar.setForeground(Color.WHITE);
 				btnFechar.setBackground(Color.RED);
-				btnFechar.setBounds(1002, 24, 85, 27);
+				btnFechar.setBounds(1013, 18, 85, 27);
 				top_fixed_panel.add(btnFechar);
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.ORANGE);
-		panel.setBounds(1050, 0, 68, 101);
-		top_fixed_panel.add(panel);
-		
-		JLabel current_activity = new JLabel("Home");
-		current_activity.setBounds(562, 13, 117, 27);
+		JLabel current_activity = new JLabel("Nova Alian\u00E7a");
+		current_activity.setBounds(552, 11, 117, 40);
 		current_activity.setForeground(Color.WHITE);
 		top_fixed_panel.add(current_activity);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(22, 108, 38));
+		panel.setBounds(504, 0, 165, 64);
+		top_fixed_panel.add(panel);
 		
 		/*Close Button*/
 		

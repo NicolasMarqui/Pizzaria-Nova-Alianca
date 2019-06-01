@@ -22,6 +22,8 @@ import javax.swing.JTable;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
@@ -86,8 +88,12 @@ public class FinalizarCompra extends JFrame {
 		
 		tablePedidoAberto = new JTable();
 		tablePedidoAberto.setBounds(588, 158, 207, 222);
-		contentPane.add(tablePedidoAberto);
 		
+		JScrollPane scrollAberto = new JScrollPane(tablePedidoAberto);
+		scrollAberto.setBounds(588, 158, 207, 222);
+		
+		contentPane.add(scrollAberto);
+
 		JLabel lblClientesComPedidos = new JLabel("Clientes com pedidos abertos");
 		lblClientesComPedidos.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblClientesComPedidos.setBounds(589, 125, 206, 22);
@@ -96,7 +102,11 @@ public class FinalizarCompra extends JFrame {
 		DefaultTableModel modelProdFinal = new DefaultTableModel(); 
 		tableConfirmaProduto = new JTable(modelProdFinal);
 		tableConfirmaProduto.setBounds(87, 159, 327, 133);
-		contentPane.add(tableConfirmaProduto);
+		
+		JScrollPane scrollConfirmar = new JScrollPane(tableConfirmaProduto);
+		scrollConfirmar.setBounds(87, 159, 327, 133);
+		
+		contentPane.add(scrollConfirmar);
 		
 		modelProdFinal.addColumn("Código");
         modelProdFinal.addColumn("Nome");

@@ -210,7 +210,11 @@ public class EditarCliente extends JFrame {
 			}
 		});
 		table.setBounds(21, 54, 851, 111);
-		contentPane.add(table);
+		
+		JScrollPane scrollEditar = new JScrollPane(table);
+		scrollEditar.setBounds(21, 54, 851, 111);
+		
+		contentPane.add(scrollEditar);
 		//JScrollPane sp = new JScrollPane(table);
 		//contentPane.add(sp);
 		
