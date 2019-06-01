@@ -233,6 +233,7 @@ public class FinalizarCompra extends JFrame {
 	 					//Troco trocoCod = new Troco(ids);
 	 					
 	 					troco.setCodigos(ids);
+	 					troco.setQuantidadeArray(ids.length);
 	 					
 	 					System.out.println(Arrays.toString(troco.returnCodigos(ids)));
 	 				}
@@ -255,19 +256,27 @@ public class FinalizarCompra extends JFrame {
 						if(tableConfirmaProduto.getRowCount() > 0) {
 							double valorTotalCompra = Double.parseDouble(labelValorFinal.getText());
 							
-							if(Integer.parseInt(textComValorPago.getText()) < valorTotalCompra) {
+							if(Double.parseDouble(textComValorPago.getText()) < valorTotalCompra) {
 								JOptionPane.showMessageDialog(null, "Ops..O valor pago é menor que o de compra");
+							}else if(Double.parseDouble(textComValorPago.getText()) == valorTotalCompra) {
+								JOptionPane.showMessageDialog(null, "Tudo certo com a compra");
 							}else {
 								
-								int input = JOptionPane.showOptionDialog(null, "Troco no valor de " + (Integer.parseInt(textComValorPago.getText()) - valorTotalCompra) + " reais", "Troco", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+								int input = JOptionPane.showOptionDialog(null, "Troco no valor de " + (Double.parseDouble(textComValorPago.getText()) - valorTotalCompra) + " reais", "Troco", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 
 								if(input == JOptionPane.OK_OPTION)
 								{
-									/*if(bd.getConnection()) {
-										String alterarProduto = "SELECT PED.COD_PEDIDO, P.NOME,P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE='" +  Integer.parseInt(labelCodCliente.getText()) +"' AND C.COD_CLIENTE=PED.COD_CLIENTE AND P.COD_PRODUTO=PED.COD_PRODUTO";
-									}*/
+									String menConclude = "Aguarde...";
 									
-									System.out.println(Arrays.toString(troco.getCodigos()));
+									for(int i = 0; i < tableConfirmaProduto.getRowCount() ; i++) {
+										if(troco.salvarTroco((Double.parseDouble(textComValorPago.getText()) - valorTotalCompra), Integer.parseInt(tableConfirmaProduto.getModel().getValueAt(i, 0).toString()))) {
+											menConclude = "Obrigado pela compra";
+										}else {
+											menConclude = "Erro durante salvamento da compra";
+										}
+									}
+									
+									JOptionPane.showMessageDialog(null,menConclude);
 								}
 							}
 							
