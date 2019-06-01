@@ -106,9 +106,9 @@ public class Pedido {
 		this.cod_pedido = cod_pedido;
 	}
 	
+	DB bd = new DB();
+	
 	public boolean salvarPedido(double valor_pedido, String data_pedido, int cod_cliente, int cod_produto) {
-		DB bd = new DB();
-		
 		if(bd.getConnection()) {
 			
 			String sqlSalvarPedido = "INSERT INTO pedido(valor_pedido, data_pedido, cod_cliente, cod_produto) values(?, ? , ?, ?)";
@@ -138,4 +138,5 @@ public class Pedido {
 		
 		return false;
 	}
+	
 }

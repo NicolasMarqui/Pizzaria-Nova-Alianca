@@ -191,6 +191,20 @@ public class FinalizarCompra extends JFrame {
 
 		DB bd = new DB();
 		PedidoProduto ped = new PedidoProduto();
+		
+		if(bd.getConnection()) {
+			String sql = "SELECT COD_PEDIDO, COD_CLIENTE, VALOR_PEDIDO, COD_PRODUTO FROM PEDIDO WHERE statusPedido = 0";
+			
+			try {
+				model = TableModel.getModel(bd, sql);
+				tablePedidoAberto.setModel(model);
+				
+			}catch(IllegalArgumentException erro) {					
+				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+		}
 
 		btnProcurarPedidos.addMouseListener(new MouseAdapter() {
 			@Override
@@ -286,8 +300,19 @@ public class FinalizarCompra extends JFrame {
 						}
 					}
 				}else {
-					if(tableConfirmaProduto.getRowCount() > 0) {
-						String numeroCartao = JOptionPane.showInputDialog("Digite o numero do Cartão: ");
+					if(tableConfirmaProduto.getRowCount() > 0 && !panelnserirDinheiro.isVisible()) {
+						try {
+							String numeroCartao = JOptionPane.showInputDialog("Digite o numero do Cartão: ");
+							
+							if(numeroCartao.length() == 4) {
+								JOptionPane.showMessageDialog(null, "Obrigado pela compra");
+							}else {
+								JOptionPane.showMessageDialog(null, "Erro no cartão");
+							}
+							
+						}catch(NumberFormatException eee) {
+							JOptionPane.showMessageDialog(null, "Apenas números");
+						}
 					}			
 				}
 			}

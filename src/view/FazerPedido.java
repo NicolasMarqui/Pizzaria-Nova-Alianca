@@ -217,9 +217,6 @@ public class FazerPedido extends JFrame {
  				bd.close();
  			}
  		}
-         
-         JLabel[] labels = new JLabel[100];
-         
          /*if(bd.getConnection()) { 	 
   			String sql = "SELECT nome, valor_unitario FROM produto";
   			
@@ -280,19 +277,23 @@ public class FazerPedido extends JFrame {
           		
           		String codigo = tableProduto.getModel().getValueAt(row, 0).toString();
           		String nome = tableProduto.getModel().getValueAt(row, 1).toString();
-          		//String preco = tableProduto.getModel().getValueAt(row, 2).toString();
+          		String preco = tableProduto.getModel().getValueAt(row, 2).toString();
           		
-          		modelFinal.addRow(new Object[]{codigo,nome});
+          		modelFinal.addRow(new Object[]{codigo,nome,preco});
           		
           		int rowCount = tableProdutoFinal.getRowCount();
           		double soma = 0;
           		
-          		for(int i = 0; i < rowCount  ;i++) {
-          			soma += Integer.parseInt(tableProdutoFinal.getValueAt(i, 2).toString());
-          		}
-          		
-          		lblValorTotal.setText(Double.toString(soma));
+          		try {
+          			for(int i = 0; i < rowCount  ;i++) {
+              			soma += Double.parseDouble(tableProdutoFinal.getValueAt(i, 2).toString());
+              		}
+              		
+              		lblValorTotal.setText(Double.toString(soma));
 
+          		}catch(NullPointerException e) {
+          			JOptionPane.showMessageDialog(null, e.toString());
+          		}
           	}
           });
          
@@ -308,21 +309,26 @@ public class FazerPedido extends JFrame {
          	@Override
          	public void mouseClicked(MouseEvent arg0) {
          		
-         		if(modelProdFinal.getRowCount() > -1) {
-         			modelProdFinal.removeRow(tableProdutoFinal.getSelectedRow());
-         		}
-         		
-         		if(modelProdFinal.getRowCount() != -1) {
-         			String codigo = modelProdFinal.getValueAt(tableProdutoFinal.getSelectedRow(), 0).toString();
-              		double valorAnterior = Double.parseDouble(lblValorTotal.getText());
-              		
-              		double novoValor = valorAnterior - Integer.parseInt(codigo);
-              		
-              		if(novoValor >= 0) {
-              			lblValorTotal.setText("0");
-              		}
-              		
-              		lblValorTotal.setText(Double.toString(novoValor));
+         		try {
+         			/*if(modelProdFinal.getRowCount() > -1) {
+             			modelProdFinal.removeRow(tableProdutoFinal.getSelectedRow());
+             		}*/
+             		
+             		if(modelProdFinal.getRowCount() != -1) {
+             			String codigo = modelProdFinal.getValueAt(tableProdutoFinal.getSelectedRow(), 2).toString();
+                  		double valorAnterior = Double.parseDouble(lblValorTotal.getText());
+                  		
+                  		double novoValor = valorAnterior - Double.parseDouble(codigo);
+                  		modelProdFinal.removeRow(tableProdutoFinal.getSelectedRow());
+                  		
+                  		if(novoValor <= 0) {
+                  			lblValorTotal.setText("0");
+                  		}
+                  		
+                  		lblValorTotal.setText(Double.toString(novoValor));
+             		}
+         		}catch(ArrayIndexOutOfBoundsException arr) {
+         			JOptionPane.showMessageDialog(null, arr.toString());
          		}
          	}
          });
