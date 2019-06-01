@@ -26,12 +26,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Arrays;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class FinalizarCompra extends JFrame {
 
@@ -199,7 +201,7 @@ public class FinalizarCompra extends JFrame {
 				if(bd.getConnection()) {
 					
 					DefaultTableModel modelFinal = (DefaultTableModel) tableConfirmaProduto.getModel();
-					String sqlMostrarPedido = "SELECT P.NOME,P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE='" +  Integer.parseInt(labelCodCliente.getText()) +"' AND C.COD_CLIENTE=PED.COD_CLIENTE AND P.COD_PRODUTO=PED.COD_PRODUTO";
+					String sqlMostrarPedido = "SELECT PED.COD_PEDIDO, P.NOME,P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE='" +  Integer.parseInt(labelCodCliente.getText()) +"' AND C.COD_CLIENTE=PED.COD_CLIENTE AND P.COD_PRODUTO=PED.COD_PRODUTO";
 					//String sqlMostrarPedido = "SELECT * FROM PRODUTO P WHERE EXISTS (SELECT * FROM PEDIDO PE WHERE P.COD_PRODUTO = PE.COD_PRODUTO AND PE.COD_CLIENTE = ?) ";
 					
 					try {
@@ -216,58 +218,23 @@ public class FinalizarCompra extends JFrame {
 					}
 					
 					model = TableModel.getModel(bd, sqlMostrarPedido );
-	 				tableConfirmaProduto.setModel(model);
-					
-		 			/*try {
-		 				
-		 				bd.st = bd.con.prepareStatement(sqlMostrarPedido);
-		 				
-		 				if(codigoClienteFinalizar.getText() != null || codigoClienteFinalizar.getText() != "") {
-		 					bd.st.setInt(1, Integer.parseInt(labelCodCliente.getText()));
-		 				}else {
-		 					bd.st.setInt(1, 2);
-		 				}
-
-		 				
-		 				//codigoClienteFinalizar.setText("");
-						
-						bd.rs = bd.st.executeQuery();
-						
-						if(bd.rs.next()) {
-							do {
-								String nome = bd.rs.getString("nome");
-								double preco = bd.rs.getDouble("valor_unitario");
-								
-								modelFinal.addRow(new Object[]{nome,preco});
-							}while(bd.rs.next());
-							
-							//codigoClienteFinalizar.setText("");
-							
-						}else {
-							JOptionPane.showMessageDialog(null, "Nenhum produto cadastrado para esse cliente");
-							codigoClienteFinalizar.setText("");
-						}
-						
-		 				
-		 				
-		 				
-		 			}catch(IllegalArgumentException erro) {					
-		 				JOptionPane.showMessageDialog(null, erro.getMessage().toString());
-		 				erro.printStackTrace();
-		 			} catch (SQLException e) {
-						JOptionPane.showMessageDialog(null, e.getMessage().toString());
-					}finally {
-		 				bd.close();
-		 			}*/
-	 				
+	 				tableConfirmaProduto.setModel(model);	 				
 	 				int count= tableConfirmaProduto.getModel().getRowCount();
 	 				double valorFinal = 0;
+	 				int[] ids = new int[count];
 	 				
 	 				if(count > 0) {
 	 					for(int i = 0;i < count;i++) {
-	 						valorFinal += Double.parseDouble(tableConfirmaProduto.getModel().getValueAt(i, 1).toString());
+	 						valorFinal += Double.parseDouble(tableConfirmaProduto.getModel().getValueAt(i, 2).toString());
 	 						labelValorFinal.setText(Double.toString(valorFinal));
+	 						ids[i] = Integer.parseInt(tableConfirmaProduto.getModel().getValueAt(i, 0).toString());
 	 					}
+	 					
+	 					//Troco trocoCod = new Troco(ids);
+	 					
+	 					troco.setCodigos(ids);
+	 					
+	 					System.out.println(Arrays.toString(troco.returnCodigos(ids)));
 	 				}
 		 		}
 			}
@@ -276,6 +243,11 @@ public class FinalizarCompra extends JFrame {
 		btnFinalizarCompra.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				if(tableConfirmaProduto.getRowCount() < 0) {
+					JOptionPane.showMessageDialog(null, "Selecione um cliente");
+				}
+				
 				if(panelnserirDinheiro.isVisible()) {
 					if(textComValorPago.getText() == null || textComValorPago.getText().trim().isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Insira o valor pago");
@@ -286,7 +258,17 @@ public class FinalizarCompra extends JFrame {
 							if(Integer.parseInt(textComValorPago.getText()) < valorTotalCompra) {
 								JOptionPane.showMessageDialog(null, "Ops..O valor pago é menor que o de compra");
 							}else {
-								JOptionPane.showMessageDialog(null, "Troco no valor de " + (Integer.parseInt(textComValorPago.getText()) - valorTotalCompra) + " reais");
+								
+								int input = JOptionPane.showOptionDialog(null, "Troco no valor de " + (Integer.parseInt(textComValorPago.getText()) - valorTotalCompra) + " reais", "Troco", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+								if(input == JOptionPane.OK_OPTION)
+								{
+									/*if(bd.getConnection()) {
+										String alterarProduto = "SELECT PED.COD_PEDIDO, P.NOME,P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE='" +  Integer.parseInt(labelCodCliente.getText()) +"' AND C.COD_CLIENTE=PED.COD_CLIENTE AND P.COD_PRODUTO=PED.COD_PRODUTO";
+									}*/
+									
+									System.out.println(Arrays.toString(troco.getCodigos()));
+								}
 							}
 							
 							
