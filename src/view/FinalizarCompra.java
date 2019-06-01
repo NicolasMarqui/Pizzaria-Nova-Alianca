@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import control.DB;
 import control.TableModel;
 import model.PedidoProduto;
+import model.Troco;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -18,6 +19,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTable;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import java.awt.event.KeyAdapter;
@@ -40,6 +42,7 @@ public class FinalizarCompra extends JFrame {
 	private JButton btnRemoverProdutoFinalizar;
 	private JLabel lblModoDePagamento;
 	private DefaultTableModel model;
+	private JTextField textComValorPago;
 
 	/**
 	 * Launch the application.
@@ -111,8 +114,12 @@ public class FinalizarCompra extends JFrame {
 		contentPane.add(checkDinheiro);
 		
 		JRadioButton checkCartao = new JRadioButton("Cart\u00E3o");
-		checkCartao.setBounds(341, 428, 72, 23);
+		checkCartao.setBounds(257, 402, 72, 23);
 		contentPane.add(checkCartao);
+		
+		ButtonGroup groupPagamento = new ButtonGroup();
+		groupPagamento.add(checkDinheiro);
+		groupPagamento.add(checkCartao);
 		
 		JLabel lblValor = new JLabel("Valor");
 		lblValor.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -130,7 +137,7 @@ public class FinalizarCompra extends JFrame {
 		contentPane.add(labelValorFinal);
 		
 		JButton btnFinalizarCompra = new JButton("Finalizar");
-		btnFinalizarCompra.setBounds(150, 481, 207, 23);
+		btnFinalizarCompra.setBounds(87, 481, 327, 45);
 		contentPane.add(btnFinalizarCompra);
 		
 		JLabel lblCaixa = new JLabel("Caixa");
@@ -142,10 +149,44 @@ public class FinalizarCompra extends JFrame {
 		btnProcurarPedidos.setBounds(424, 127, 133, 23);
 		contentPane.add(btnProcurarPedidos);
 		
-		JLabel labelCodCliente = new JLabel("New label");
+		JLabel labelCodCliente = new JLabel("");
 		labelCodCliente.setBounds(749, 11, 46, 14);
 		contentPane.add(labelCodCliente);
 		
+		JPanel panelnserirDinheiro = new JPanel();
+		panelnserirDinheiro.setBounds(87, 433, 327, 37);
+		contentPane.add(panelnserirDinheiro);
+		panelnserirDinheiro.setLayout(null);
+		panelnserirDinheiro.setVisible(false);
+		
+		JLabel lblNewLabel = new JLabel("Valor pago: ");
+		lblNewLabel.setBounds(10, 11, 92, 14);
+		panelnserirDinheiro.add(lblNewLabel);
+		
+		textComValorPago = new JTextField();
+		textComValorPago.setBounds(100, 8, 217, 20);
+		panelnserirDinheiro.add(textComValorPago);
+		textComValorPago.setColumns(10);
+		
+		Troco troco = new Troco();
+		
+		checkDinheiro.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				panelnserirDinheiro.setVisible(true);
+				troco.setMoney(true);
+			}
+		});
+		
+		checkCartao.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				panelnserirDinheiro.setVisible(false);
+				troco.setMoney(false);
+			}
+		});
+		
+
 		DB bd = new DB();
 		PedidoProduto ped = new PedidoProduto();
 
@@ -231,5 +272,35 @@ public class FinalizarCompra extends JFrame {
 		 		}
 			}
 		});
+		
+		btnFinalizarCompra.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(panelnserirDinheiro.isVisible()) {
+					if(textComValorPago.getText() == null || textComValorPago.getText().trim().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "Insira o valor pago");
+					}else {
+						if(tableConfirmaProduto.getRowCount() > 0) {
+							double valorTotalCompra = Double.parseDouble(labelValorFinal.getText());
+							
+							if(Integer.parseInt(textComValorPago.getText()) < valorTotalCompra) {
+								JOptionPane.showMessageDialog(null, "Ops..O valor pago é menor que o de compra");
+							}else {
+								JOptionPane.showMessageDialog(null, "Troco no valor de " + (Integer.parseInt(textComValorPago.getText()) - valorTotalCompra) + " reais");
+							}
+							
+							
+						}else {
+							JOptionPane.showMessageDialog(null, "Selecione um cliente antes");
+						}
+					}
+				}else {
+					if(tableConfirmaProduto.getRowCount() > 0) {
+						String numeroCartao = JOptionPane.showInputDialog("Digite o numero do Cartão: ");
+					}			
+				}
+			}
+		});
+
 	}
 }
