@@ -108,10 +108,62 @@ public class DashBoard extends JFrame {
 		home_panel.setForeground(Color.WHITE);
 		home_panel.setLayout(null);
 		JLabel logo_label = new JLabel(logo, SwingConstants.CENTER);
-		logo_label.setBounds(0, 0, 1130, 675);
+		logo_label.setBounds(275, 44, 613, 194);
 		home_panel.add(logo_label);
 		card_panel.add(home_panel, "name_92972993277223");
 		home_panel.setBackground(new Color(255, 255, 255));
+		
+		JPanel panelVendas = new JPanel();
+		panelVendas.setBounds(84, 324, 268, 199);
+		home_panel.add(panelVendas);
+		panelVendas.setLayout(null);
+		
+		Pedido ped = new Pedido();
+		
+		JLabel labelTotalPedidos = new JLabel(Integer.toString(ped.quantidadePedidos()));
+		labelTotalPedidos.setHorizontalAlignment(SwingConstants.CENTER);
+		labelTotalPedidos.setFont(new Font("Dialog", Font.BOLD, 36));
+		labelTotalPedidos.setBounds(57, 37, 143, 106);
+		panelVendas.add(labelTotalPedidos);
+		
+		JLabel lblProdutos = new JLabel("Vendas");
+		lblProdutos.setBounds(108, 154, 76, 14);
+		panelVendas.add(lblProdutos);
+		
+		JPanel panelProdutos = new JPanel();
+		panelProdutos.setBounds(399, 324, 268, 199);
+		home_panel.add(panelProdutos);
+		panelProdutos.setLayout(null);
+		
+		Produto prod = new Produto();
+		
+		JLabel labelProdutosTotal = new JLabel(Integer.toString(prod.quantidadeProdutos()));
+		labelProdutosTotal.setHorizontalAlignment(SwingConstants.CENTER);
+		labelProdutosTotal.setFont(new Font("Dialog", Font.BOLD, 36));
+		labelProdutosTotal.setBounds(58, 35, 143, 106);
+		panelProdutos.add(labelProdutosTotal);
+		
+		JLabel label_2 = new JLabel("Produtos");
+		label_2.setBounds(109, 152, 75, 14);
+		panelProdutos.add(label_2);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(733, 324, 268, 199);
+		home_panel.add(panel_1);
+		panel_1.setLayout(null);
+		
+		Cliente cli = new Cliente();
+		
+		JLabel labelTotalClientes = new JLabel(Integer.toString(cli.quantidadeCliente()));
+		System.out.println(Integer.toString(cli.quantidadeCliente()));
+		labelTotalClientes.setHorizontalAlignment(SwingConstants.CENTER);
+		labelTotalClientes.setFont(new Font("Dialog", Font.BOLD, 36));
+		labelTotalClientes.setBounds(66, 44, 143, 106);
+		panel_1.add(labelTotalClientes);
+		
+		JLabel lblClientes = new JLabel("Clientes");
+		lblClientes.setBounds(120, 153, 70, 14);
+		panel_1.add(lblClientes);
 		
 		JPanel cadastro_panel = new JPanel();
 		card_panel.add(cadastro_panel, "name_94484432854786");

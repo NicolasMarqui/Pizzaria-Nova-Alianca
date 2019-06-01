@@ -192,9 +192,9 @@ public class Cliente {
 		System.out.println("Cod é " + this.codigoCliente);
 	}
 	
-	public void salvarCliente(String nome, String cpf, String cidade, String rua, String bairro , String numero, String cep, String telefone) {
-		DB bd = new DB();
-			
+	DB bd = new DB();
+	
+	public void salvarCliente(String nome, String cpf, String cidade, String rua, String bairro , String numero, String cep, String telefone) {		
 		if(bd.getConnection()) {
 			
 			String sqlSalvarProd = "INSERT INTO cliente(NOME_CLIENTE,cpf,cidade,rua,bairro,numero,cep,telefone) values(?, ? , ?, ? , ? , ?, ?, ?)";
@@ -225,9 +225,6 @@ public class Cliente {
 	}
 	
 	public void atualizarCliente(int id , String nome, String cpf, String cidade, String rua, String bairro , String numero, String cep, String telefone) {
-		
-		DB bd = new DB();
-		
 		if(bd.getConnection()) {
 			
 			String sqlAtualizarProd = "UPDATE cliente SET NOME_CLIENTE = ? , cpf = ? , cidade = ? , rua = ? , bairro = ? , numero = ?  , cep = ? , telefone = ? WHERE COD_CLIENTE = ?";
@@ -260,8 +257,6 @@ public class Cliente {
 	}
 	
 	public void deletarCliente(int id) {
-		DB bd = new DB(); 
-		
 		if(bd.getConnection()) {
 			
 			String sqlDeletarCliente = "DELETE FROM cliente WHERE COD_CLIENTE = ?";
@@ -282,6 +277,37 @@ public class Cliente {
 			}
 			
 		}
+	}
+	
+	public int quantidadeCliente() {
+		if(bd.getConnection()) {
+			
+			String contarCliente = "SELECT COUNT(*) AS CLIENTES FROM CLIENTE";
+			int value = 0;
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(contarCliente);
+				bd.rs = bd.st.executeQuery();			
+					
+				while (bd.rs.next()) {
+					return bd.rs.getInt("CLIENTES");
+		        }
+				
+				return value;
+				
+				
+			}catch(SQLException erro) {
+				
+				return 0;
+				
+				
+			}finally {
+				bd.close();
+			}
+			
+		}
+		return 10;
 	}
 	
 	

@@ -75,9 +75,9 @@ public class Produto {
 		this.nome = nome;
 	}
 	
-	public void salvarProduto(String nome, String tipo, double preco) {
-		DB bd = new DB();
-			
+	DB bd = new DB();
+	
+	public void salvarProduto(String nome, String tipo, double preco) {			
 		if(bd.getConnection()) {
 			
 			String sqlSalvarProd = "INSERT INTO produto(nome,tipo,valor_unitario) values(?, ? , ?)";
@@ -101,7 +101,34 @@ public class Produto {
 		}
 	}
 	
-	public void popularTabela() {
-		
+	public int quantidadeProdutos() {
+		if(bd.getConnection()) {
+			
+			String contarCliente = "SELECT COUNT(*) AS PRODUTOS FROM PRODUTO";
+			int value = 0;
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(contarCliente);
+				bd.rs = bd.st.executeQuery();			
+					
+				while (bd.rs.next()) {
+					return bd.rs.getInt("PRODUTOS");
+		        }
+				
+				return value;
+				
+				
+			}catch(SQLException erro) {
+				
+				return 0;
+				
+				
+			}finally {
+				bd.close();
+			}
+			
+		}
+		return 10;
 	}
 }
