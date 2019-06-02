@@ -569,7 +569,7 @@ public class DashBoard extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		textPesquisaData.setBounds(127, 88, 58, 23);
+		textPesquisaData.setBounds(127, 88, 94, 23);
 		relatorio.add(textPesquisaData);
 		textPesquisaData.setColumns(10);
 		
@@ -578,16 +578,16 @@ public class DashBoard extends JFrame {
 		lblPeriodo.setBounds(71, 90, 46, 14);
 		relatorio.add(lblPeriodo);
 		
-		JButton btnPesquisa = new JButton("Pesquisa");
-		btnPesquisa.setBounds(195, 88, 89, 23);
-		relatorio.add(btnPesquisa);
+		JButton btnPesquisaPorData = new JButton("Pesquisa");
+		btnPesquisaPorData.setBounds(231, 90, 89, 23);
+		relatorio.add(btnPesquisaPorData);
 		
 		JButton btnLimpar = new JButton("Limpar");
 		btnLimpar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(bd.getConnection()) {
-					String sql = "SELECT * FROM PEDIDO";
+					String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido";
 					
 					try {
 						model = TableModel.getModel(bd, sql);
@@ -603,6 +603,10 @@ public class DashBoard extends JFrame {
 		});
 		btnLimpar.setBounds(983, 90, 72, 23);
 		relatorio.add(btnLimpar);
+		
+		JButton btnMaisDetalhes = new JButton("Mais detalhes");
+		btnMaisDetalhes.setBounds(71, 615, 138, 23);
+		relatorio.add(btnMaisDetalhes);
 		
 		JPanel panel_venda = new JPanel();
 		panel_venda.addMouseListener(new MouseAdapter() {
@@ -884,21 +888,42 @@ public class DashBoard extends JFrame {
 		//relatorio.add(new JScrollPane(tablePrincipal));
 		
 		if(bd.getConnection()) {
-			String sql = "SELECT * FROM PEDIDO";
+			String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido";
 			
 			try {
 				model = TableModel.getModel(bd, sql);
 				tablePrincipal.setModel(model);
 				
 			}catch(IllegalArgumentException erro) {					
-				JOptionPane.showMessageDialog(null, erro.toString());
+				JOptionPane.showMessageDialog(null, "Erro 6675");
 			}finally {
 				bd.close();
 			}
 		}
 		
 		
-		
+		btnPesquisaPorData.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(textPesquisaData.getText() == null || textPesquisaData.getText().trim().isEmpty() || textPesquisaData.getText().length() < 8) {
+					JOptionPane.showMessageDialog(null, "Insira uma data antes");
+				}else {
+					if(bd.getConnection()) {
+						String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido WHERE DATA_PEDIDO = '" + textPesquisaData.getText() + "'";
+						
+						try {
+							model = TableModel.getModel(bd, sql);
+							tablePrincipal.setModel(model);
+							
+						}catch(IllegalArgumentException erro) {					
+							JOptionPane.showMessageDialog(null, "Nenhum produto");
+						}finally {
+							bd.close();
+						}
+					}
+				}
+			}
+		});
 		
 		
 		

@@ -8,7 +8,7 @@ public class Relatorio {
 	
 	DB bd = new DB();
 	
-	public int quantidadePedidos() {
+	public int pesquisaPorData() {
 		if(bd.getConnection()) {
 			
 			String contarCliente = "SELECT COUNT(*) AS PEDIDOS FROM PEDIDO";
