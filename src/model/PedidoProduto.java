@@ -50,9 +50,9 @@ public class PedidoProduto {
 		this.quantidade = quantidade;
 	}
 	
+	DB bd = new DB();
+	
 	public void todosPedidosCliente(int id) {
-		DB bd = new DB();
-		
 		if(bd.getConnection()) {
 			
 			String sqlMostrarPedido = "SELECT PED.COD_PEDIDO, PED.COD_CLIENTE, PED.COD_PRODUTO , PED.VALOR_PEDIDO , P.NOME, P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE = ? AND C.COD_CLIENTE = PED.COD_CLIENTE AND P.COD_PRODUTO = PED.COD_PRODUTO";
@@ -69,6 +69,52 @@ public class PedidoProduto {
 			}catch(SQLException erro) {
 				JOptionPane.showMessageDialog(null, "Não foi possivel carregar os pedidos, tente novamente mais tarde");
 				JOptionPane.showMessageDialog(null, erro.toString());
+			}finally {
+				bd.close();
+			}
+		}
+	}
+	
+	public int temDesconto(int codigoCliente) {
+		if(bd.getConnection()) {
+			
+			String sqlChecarDesconto = "SELECT PED.COD_CLIENTE as 'Código', C.NOME_CLIENTE AS 'Cliente' , COUNT(PED.COD_CLIENTE ) as 'pedidos' FROM PEDIDO PED, CLIENTE C  WHERE PED.COD_CLIENTE = ? AND C.COD_CLIENTE = ? GROUP BY PED.COD_CLIENTE, C.NOME_CLIENTE";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(sqlChecarDesconto);
+				bd.st.setInt(1,codigoCliente);
+				bd.st.setInt(2,codigoCliente);
+				
+				bd.rs = bd.st.executeQuery();
+				
+				while (bd.rs.next()) {
+					return bd.rs.getInt("pedidos");
+		        }
+									
+			}catch(SQLException erro) {
+				return 0;
+			}finally {
+				bd.close();
+			}
+		}
+		return 0;
+	}
+	
+	public void salvarDesconto(int cod_pedido, double valor_desconto) {
+		if(bd.getConnection()) {	
+			String salvarDesconto = "INSERT INTO DESCONTO(COD_PEDIDO,VALOR_DESCONTO) VALUES (?,?)";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(salvarDesconto);
+				bd.st.setInt(1,cod_pedido);
+				bd.st.setDouble(2,valor_desconto);
+				
+				bd.st.executeUpdate();
+									
+			}catch(SQLException erro) {
+				
 			}finally {
 				bd.close();
 			}
