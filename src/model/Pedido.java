@@ -111,7 +111,7 @@ public class Pedido {
 	public boolean salvarPedido(double valor_pedido, String data_pedido, int cod_cliente, int cod_produto) {
 		if(bd.getConnection()) {
 			
-			String sqlSalvarPedido = "INSERT INTO pedido(valor_pedido, data_pedido, cod_cliente, cod_produto) values(?, ? , ?, ?)";
+			String sqlSalvarPedido = "INSERT INTO pedido(valor_pedido, data_pedido, cod_cliente, cod_produto,statusPedido) values(?, ? , ?, ? , ?)";
 			
 			try{
 				
@@ -120,6 +120,7 @@ public class Pedido {
 				bd.st.setString(2,data_pedido);
 				bd.st.setInt(3,cod_cliente);
 				bd.st.setInt(4,cod_produto);
+				bd.st.setInt(5,0);
 				
 				bd.st.executeUpdate();
 				
@@ -168,6 +169,28 @@ public class Pedido {
 			
 		}
 		return 10;
+	}
+	
+	public void atualizarPedidoStatus(int codigo) {
+		if(bd.getConnection()) {
+			
+			String atualizaPedido = "UPDATE PEDIDO SET statusPedido = 1 WHERE COD_PEDIDO = ?";
+			
+			try{
+				
+				bd.st = bd.con.prepareStatement(atualizaPedido);
+				bd.st.setInt(1,codigo);
+				
+				bd.st.executeUpdate();		
+				
+				
+			}catch(SQLException erro) {
+				JOptionPane.showMessageDialog(null, erro.toString());
+				
+			}finally {
+				bd.close();
+			}
+		}
 	}
 	
 }

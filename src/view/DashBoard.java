@@ -37,6 +37,8 @@ import model.*;
 import control.*;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JSlider;
 
 
 public class DashBoard extends JFrame {
@@ -58,6 +60,11 @@ public class DashBoard extends JFrame {
 	private DefaultTableModel model;
 	private JTable tableProd;
 	private JTable tablePrincipal;
+	/**
+	 * @wbp.nonvisual location=-30,259
+	 */
+	private final JSlider slider = new JSlider();
+	private JTextField textPesquisaData;
 
 	/**
 	 * Launch the application.
@@ -517,12 +524,8 @@ public class DashBoard extends JFrame {
 		
 		
 		JButton btnExportar = new JButton("Exportar");
-		btnExportar.setBounds(920, 615, 138, 44);
+		btnExportar.setBounds(920, 625, 138, 44);
 		relatorio.add(btnExportar);
-		
-		JComboBox comboDataPedido = new JComboBox();
-		comboDataPedido.setBounds(71, 85, 118, 28);
-		relatorio.add(comboDataPedido);
 		
 		JButton btnClienteMaisCompra = new JButton("Cliente + compra");
 		btnClienteMaisCompra.addActionListener(new ActionListener() {
@@ -548,16 +551,58 @@ public class DashBoard extends JFrame {
 				
 			}
 		});
-		btnClienteMaisCompra.setBounds(920, 88, 138, 23);
+		btnClienteMaisCompra.setBounds(835, 90, 138, 23);
 		relatorio.add(btnClienteMaisCompra);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(199, 85, 125, 28);
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Valor do pedido", ">=50", " >=100", "+250"}));
+		comboBox.setBounds(378, 85, 125, 28);
 		relatorio.add(comboBox);
 		
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(334, 85, 125, 28);
+		comboBox_1.setBounds(513, 85, 125, 28);
 		relatorio.add(comboBox_1);
+		
+		try {
+			textPesquisaData = new JFormattedTextField(new MaskFormatter("##/##/####"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		textPesquisaData.setBounds(127, 88, 58, 23);
+		relatorio.add(textPesquisaData);
+		textPesquisaData.setColumns(10);
+		
+		JLabel lblPeriodo = new JLabel("Periodo");
+		lblPeriodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPeriodo.setBounds(71, 90, 46, 14);
+		relatorio.add(lblPeriodo);
+		
+		JButton btnPesquisa = new JButton("Pesquisa");
+		btnPesquisa.setBounds(195, 88, 89, 23);
+		relatorio.add(btnPesquisa);
+		
+		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(bd.getConnection()) {
+					String sql = "SELECT * FROM PEDIDO";
+					
+					try {
+						model = TableModel.getModel(bd, sql);
+						tablePrincipal.setModel(model);
+						
+					}catch(IllegalArgumentException erro) {					
+						JOptionPane.showMessageDialog(null, erro.toString());
+					}finally {
+						bd.close();
+					}
+				}
+			}
+		});
+		btnLimpar.setBounds(983, 90, 72, 23);
+		relatorio.add(btnLimpar);
 		
 		JPanel panel_venda = new JPanel();
 		panel_venda.addMouseListener(new MouseAdapter() {
@@ -820,7 +865,7 @@ public class DashBoard extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(22, 108, 38));
-		panel.setBounds(504, 0, 165, 64);
+		panel.setBounds(965, 0, 165, 64);
 		top_fixed_panel.add(panel);
 		
 		/*Close Button*/

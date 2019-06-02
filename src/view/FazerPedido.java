@@ -45,6 +45,7 @@ import java.awt.event.ItemEvent;
 import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
 import java.awt.List;
+import java.awt.Color;
 
 public class FazerPedido extends JFrame {
 
@@ -82,13 +83,15 @@ public class FazerPedido extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 737, 585);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblVenda = new JLabel("Pedido");
+		lblVenda.setForeground(Color.WHITE);
 		lblVenda.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		lblVenda.setBounds(316, 11, 93, 50);
+		lblVenda.setBounds(316, 0, 93, 61);
 		contentPane.add(lblVenda);
 		
 		clienteBusca = new JTextField();		
@@ -225,37 +228,6 @@ public class FazerPedido extends JFrame {
  				bd.close();
  			}
  		}
-         /*if(bd.getConnection()) { 	 
-  			String sql = "SELECT nome, valor_unitario FROM produto";
-  			
-  			try {
-  				bd.st = bd.con.prepareStatement(sql);
-  				bd.rs = bd.st.executeQuery();
-  				int columnCount = bd.rs.getMetaData().getColumnCount();
-  				
-  				while(bd.rs.next())
-  				{
-  				    for (int i=0; i <columnCount ; i++)
-  				    {
-  				    	String nomeProd = bd.rs.getString("nome");
-  				    	Double precoProd = bd.rs.getDouble("valor_unitario");
-  				    	JLabel label = new JLabel(nomeProd);
-  				    	JLabel espaco = new JLabel(precoProd.toString());
-  				    	panelProdutos.add(label);
-  				    	panelProdutos.add(espaco);
-  				    }
-  				}
-  				
-  				
-  			}catch(IllegalArgumentException erro) {					
-  				JOptionPane.showMessageDialog(null, erro.toString());
-  			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}finally {
-  				bd.close();
-  			}
-  		}*/
          
          JLabel lblValorTotal = new JLabel("0.00");
          lblValorTotal.setFont(new Font("Tahoma", Font.PLAIN, 26));
@@ -353,6 +325,13 @@ public class FazerPedido extends JFrame {
          lblProdutos.setBounds(419, 262, 103, 29);
          contentPane.add(lblProdutos);
          
+         JPanel panel = new JPanel();
+         panel.setBounds(0, 0, 721, 63);
+         panel.setBackground(new Color(199, 42, 27));
+         contentPane.add(panel);
+         
+         Pedido ped = new Pedido();
+         
          btnFinalizar.addMouseListener(new MouseAdapter() {
  			@Override
  			public void mouseClicked(MouseEvent e) {
@@ -362,18 +341,15 @@ public class FazerPedido extends JFrame {
  				if(textCliente.getText() == null || textCliente.getText().trim().isEmpty() || fieldData.getText() == null || fieldData.getText().trim().isEmpty() || tableProdutoFinal.getRowCount() == 0) {
  					JOptionPane.showMessageDialog(null, "Verifique se todos os campos estão preenchidos");				
  				}else {
- 					
- 					Pedido ped = new Pedido();
- 					
  					System.out.println(tableProdutoFinal.getRowCount());
  					
  					for(int i = 0; i < tableProdutoFinal.getRowCount();i++) {
- 	          			//ped.salvarPedido( Double.parseDouble(lblValorTotal.getText()), fieldData.getText(), Integer.parseInt(textCliente.getText()),Integer.parseInt(modelProdFinal.getValueAt(i, 0).toString()));
- 	          			
- 	          			if(ped.salvarPedido( Double.parseDouble(lblValorTotal.getText()), fieldData.getText(), Integer.parseInt(textCliente.getText()),Integer.parseInt(modelProdFinal.getValueAt(i, 0).toString()))) {
- 	          				mensagemProduto = true;
- 	          				textCliente.setText("");
- 	          				modelProdFinal.setNumRows(0);
+ 						
+ 						boolean salvar = ped.salvarPedido( Double.parseDouble(lblValorTotal.getText()), fieldData.getText(), Integer.parseInt(textCliente.getText()),Integer.parseInt(modelProdFinal.getValueAt(i, 0).toString()));
+ 						
+ 	          			if(salvar) {
+ 	          				mensagemProduto = true; 	          				
+ 	          				System.out.println("done");
  	          				
  	          			}else {
  	          				mensagemProduto = false;
@@ -381,6 +357,8 @@ public class FazerPedido extends JFrame {
  	          		}
  					
  					JOptionPane.showMessageDialog(null, mensagemProduto ? "Pedido feito com sucesso" : "Falha ao realizar o pedido");
+ 					textCliente.setText("");
+       				modelProdFinal.setNumRows(0);
  				}
  			}
  		});

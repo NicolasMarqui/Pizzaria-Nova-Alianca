@@ -10,7 +10,9 @@ import javax.swing.table.DefaultTableModel;
 
 import control.DB;
 import control.TableModel;
+import model.Pedido;
 import model.PedidoProduto;
+import model.Produto;
 import model.Troco;
 
 import javax.swing.JTextField;
@@ -36,6 +38,7 @@ import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import javax.swing.JSeparator;
 
 public class FinalizarCompra extends JFrame {
 
@@ -43,7 +46,6 @@ public class FinalizarCompra extends JFrame {
 	private JTextField codigoClienteFinalizar;
 	private JTable tablePedidoAberto;
 	private JTable tableConfirmaProduto;
-	private JButton btnRemoverProdutoFinalizar;
 	private JLabel lblModoDePagamento;
 	private DefaultTableModel model;
 	private JTextField textComValorPago;
@@ -90,13 +92,13 @@ public class FinalizarCompra extends JFrame {
 		tablePedidoAberto.setBounds(588, 158, 207, 222);
 		
 		JScrollPane scrollAberto = new JScrollPane(tablePedidoAberto);
-		scrollAberto.setBounds(588, 158, 207, 222);
+		scrollAberto.setBounds(423, 433, 373, 95);
 		
 		contentPane.add(scrollAberto);
 
 		JLabel lblClientesComPedidos = new JLabel("Clientes com pedidos abertos");
 		lblClientesComPedidos.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblClientesComPedidos.setBounds(589, 125, 206, 22);
+		lblClientesComPedidos.setBounds(590, 400, 206, 22);
 		contentPane.add(lblClientesComPedidos);
 		
 		DefaultTableModel modelProdFinal = new DefaultTableModel(); 
@@ -104,17 +106,13 @@ public class FinalizarCompra extends JFrame {
 		tableConfirmaProduto.setBounds(87, 159, 327, 133);
 		
 		JScrollPane scrollConfirmar = new JScrollPane(tableConfirmaProduto);
-		scrollConfirmar.setBounds(87, 159, 327, 133);
+		scrollConfirmar.setBounds(87, 159, 687, 157);
 		
 		contentPane.add(scrollConfirmar);
 		
 		modelProdFinal.addColumn("Código");
         modelProdFinal.addColumn("Nome");
         modelProdFinal.addColumn("Valor");
-		
-		btnRemoverProdutoFinalizar = new JButton("Remover Produto");
-		btnRemoverProdutoFinalizar.setBounds(273, 303, 140, 23);
-		contentPane.add(btnRemoverProdutoFinalizar);
 		
 		lblModoDePagamento = new JLabel("Modo de Pagamento");
 		lblModoDePagamento.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -133,26 +131,12 @@ public class FinalizarCompra extends JFrame {
 		groupPagamento.add(checkDinheiro);
 		groupPagamento.add(checkCartao);
 		
-		JLabel lblValor = new JLabel("Valor");
-		lblValor.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblValor.setBounds(87, 348, 55, 22);
-		contentPane.add(lblValor);
-		
-		JLabel lblR = new JLabel("R$");
-		lblR.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblR.setBounds(311, 348, 46, 22);
-		contentPane.add(lblR);
-		
-		JLabel labelValorFinal = new JLabel("0.00");
-		labelValorFinal.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		labelValorFinal.setBounds(367, 348, 46, 22);
-		contentPane.add(labelValorFinal);
-		
 		JButton btnFinalizarCompra = new JButton("Finalizar");
 		btnFinalizarCompra.setBounds(87, 481, 327, 45);
 		contentPane.add(btnFinalizarCompra);
 		
 		JLabel lblCaixa = new JLabel("Caixa");
+		lblCaixa.setForeground(Color.WHITE);
 		lblCaixa.setFont(new Font("Tahoma", Font.PLAIN, 44));
 		lblCaixa.setBounds(87, 24, 187, 58);
 		contentPane.add(lblCaixa);
@@ -180,6 +164,35 @@ public class FinalizarCompra extends JFrame {
 		panelnserirDinheiro.add(textComValorPago);
 		textComValorPago.setColumns(10);
 		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 805, 104);
+		panel.setBackground(new Color(199, 42, 27));
+		contentPane.add(panel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.RED);
+		panel_1.setBounds(392, 327, 385, 45);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel lblValor = new JLabel("Valor");
+		lblValor.setBounds(10, 0, 79, 46);
+		panel_1.add(lblValor);
+		lblValor.setForeground(Color.WHITE);
+		lblValor.setFont(new Font("Dialog", Font.BOLD, 27));
+		
+		JLabel lblR = new JLabel("R$");
+		lblR.setBounds(235, 12, 59, 22);
+		panel_1.add(lblR);
+		lblR.setForeground(Color.WHITE);
+		lblR.setFont(new Font("Dialog", Font.BOLD, 27));
+		
+		JLabel labelValorFinal = new JLabel("0.00");
+		labelValorFinal.setBounds(304, 12, 71, 22);
+		panel_1.add(labelValorFinal);
+		labelValorFinal.setForeground(Color.WHITE);
+		labelValorFinal.setFont(new Font("Dialog", Font.BOLD, 27));
+		
 		Troco troco = new Troco();
 		
 		checkDinheiro.addMouseListener(new MouseAdapter() {
@@ -201,6 +214,7 @@ public class FinalizarCompra extends JFrame {
 
 		DB bd = new DB();
 		PedidoProduto ped = new PedidoProduto();
+		Pedido prod = new Pedido();
 		
 		if(bd.getConnection()) {
 			String sql = "SELECT COD_PEDIDO, COD_CLIENTE, VALOR_PEDIDO, COD_PRODUTO FROM PEDIDO WHERE statusPedido = 0";
@@ -210,7 +224,7 @@ public class FinalizarCompra extends JFrame {
 				tablePedidoAberto.setModel(model);
 				
 			}catch(IllegalArgumentException erro) {					
-				JOptionPane.showMessageDialog(null, erro.toString());
+				
 			}finally {
 				bd.close();
 			}
@@ -225,8 +239,7 @@ public class FinalizarCompra extends JFrame {
 				if(bd.getConnection()) {
 					
 					DefaultTableModel modelFinal = (DefaultTableModel) tableConfirmaProduto.getModel();
-					String sqlMostrarPedido = "SELECT PED.COD_PEDIDO, P.NOME,P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE='" +  Integer.parseInt(labelCodCliente.getText()) +"' AND C.COD_CLIENTE=PED.COD_CLIENTE AND P.COD_PRODUTO=PED.COD_PRODUTO";
-					//String sqlMostrarPedido = "SELECT * FROM PRODUTO P WHERE EXISTS (SELECT * FROM PEDIDO PE WHERE P.COD_PRODUTO = PE.COD_PRODUTO AND PE.COD_CLIENTE = ?) ";
+					String sqlMostrarPedido = "SELECT PED.COD_PEDIDO, P.NOME,P.VALOR_UNITARIO FROM CLIENTE C ,PEDIDO PED, PRODUTO P WHERE PED.COD_CLIENTE='" +  Integer.parseInt(labelCodCliente.getText()) +"' AND C.COD_CLIENTE=PED.COD_CLIENTE AND P.COD_PRODUTO=PED.COD_PRODUTO AND PED.statusPedido = 0";
 					
 					try {
 						
@@ -241,8 +254,8 @@ public class FinalizarCompra extends JFrame {
 						labelCodCliente.setText("");
 					}
 					
-					model = TableModel.getModel(bd, sqlMostrarPedido );
-	 				tableConfirmaProduto.setModel(model);	 				
+					/*model = TableModel.getModel(bd, sqlMostrarPedido );
+	 				tableConfirmaProduto.setModel(model);*/	 				
 	 				int count= tableConfirmaProduto.getModel().getRowCount();
 	 				double valorFinal = 0;
 	 				int[] ids = new int[count];
@@ -291,8 +304,9 @@ public class FinalizarCompra extends JFrame {
 								if(input == JOptionPane.OK_OPTION)
 								{
 									String menConclude = "Aguarde...";
-									
+
 									for(int i = 0; i < tableConfirmaProduto.getRowCount() ; i++) {
+										prod.atualizarPedidoStatus(Integer.parseInt(tableConfirmaProduto.getModel().getValueAt(i, 0).toString()));
 										if(troco.salvarTroco((Double.parseDouble(textComValorPago.getText()) - valorTotalCompra), Integer.parseInt(tableConfirmaProduto.getModel().getValueAt(i, 0).toString()))) {
 											menConclude = "Obrigado pela compra";
 										}else {
@@ -301,6 +315,8 @@ public class FinalizarCompra extends JFrame {
 									}
 									
 									JOptionPane.showMessageDialog(null,menConclude);
+									textComValorPago.setText("");
+									codigoClienteFinalizar.setText("");
 								}
 							}
 							

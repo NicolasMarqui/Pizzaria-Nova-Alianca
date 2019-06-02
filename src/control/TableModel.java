@@ -29,7 +29,7 @@ public class TableModel
 			do 
 			{
 				Vector<String> linhaAtual = new Vector<String>();
-				DecimalFormat df = new DecimalFormat("R$ 00.00");
+				DecimalFormat df = new DecimalFormat("R$ 00.000");
 				for ( int i = 1; i <= rsmd.getColumnCount(); i++ )
 				{
 					switch( rsmd.getColumnType(i)) 
