@@ -8,6 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -276,8 +277,7 @@ public class DashBoard extends JFrame {
 		
 		cadas_prod_panel.add(scrollProdutos);
 		
-		
-		
+		tableProd.repaint();
 		
 		DB bd = new DB();
 		
@@ -510,6 +510,10 @@ public class DashBoard extends JFrame {
 		scrollPane.setBounds(71, 124, 987, 480);
 		tablePrincipal.setFillsViewportHeight(true);
 		
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment( SwingConstants.RIGHT );
+		tablePrincipal.setDefaultRenderer(String.class, centerRenderer);
+		
 		relatorio.add(scrollPane);
 		
 		JTableHeader headerPrincipal = tablePrincipal.getTableHeader();
@@ -528,40 +532,24 @@ public class DashBoard extends JFrame {
 		relatorio.add(btnExportar);
 		
 		JButton btnClienteMaisCompra = new JButton("Cliente + compra");
-		btnClienteMaisCompra.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(bd.getConnection()) {
-					String sql = "SELECT COD_CLIENTE , COUNT(COD_CLIENTE ) as Total_Pedidos FROM PEDIDO GROUP BY COD_CLIENTE";
-					
-					try {
-						model = TableModel.getModel(bd, sql);
-						tablePrincipal.setModel(model);
-						
-					}catch(IllegalArgumentException erro) {					
-						JOptionPane.showMessageDialog(null, erro.toString());
-					}finally {
-						bd.close();
-					}
-				}
-			}
-		});
 		btnClienteMaisCompra.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
 			}
 		});
-		btnClienteMaisCompra.setBounds(835, 90, 138, 23);
+		btnClienteMaisCompra.setBounds(813, 90, 138, 23);
 		relatorio.add(btnClienteMaisCompra);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Valor do pedido", ">=50", " >=100", "+250"}));
-		comboBox.setBounds(378, 85, 125, 28);
-		relatorio.add(comboBox);
+		JComboBox comboBoxValorCompra = new JComboBox();
+		comboBoxValorCompra.setModel(new DefaultComboBoxModel(new String[] {"Valor do pedido", ">=50", ">=100", "+250"}));
+		comboBoxValorCompra.setBounds(378, 85, 125, 28);
+		relatorio.add(comboBoxValorCompra);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(513, 85, 125, 28);
-		relatorio.add(comboBox_1);
+		JComboBox comboBoxStatus = new JComboBox();		
+		comboBoxStatus.setModel(new DefaultComboBoxModel(new String[] {"Status", "Aberto ", "Pago"}));
+		comboBoxStatus.setBounds(513, 85, 125, 28);
+		relatorio.add(comboBoxStatus);
 		
 		try {
 			textPesquisaData = new JFormattedTextField(new MaskFormatter("##/##/####"));
@@ -583,25 +571,7 @@ public class DashBoard extends JFrame {
 		relatorio.add(btnPesquisaPorData);
 		
 		JButton btnLimpar = new JButton("Limpar");
-		btnLimpar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(bd.getConnection()) {
-					String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido";
-					
-					try {
-						model = TableModel.getModel(bd, sql);
-						tablePrincipal.setModel(model);
-						
-					}catch(IllegalArgumentException erro) {					
-						JOptionPane.showMessageDialog(null, erro.toString());
-					}finally {
-						bd.close();
-					}
-				}
-			}
-		});
-		btnLimpar.setBounds(983, 90, 72, 23);
+		btnLimpar.setBounds(961, 90, 94, 23);
 		relatorio.add(btnLimpar);
 		
 		JButton btnMaisDetalhes = new JButton("Mais detalhes");
@@ -887,6 +857,8 @@ public class DashBoard extends JFrame {
 		
 		//relatorio.add(new JScrollPane(tablePrincipal));
 		
+		tablePrincipal.repaint();
+		
 		if(bd.getConnection()) {
 			String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido";
 			
@@ -905,6 +877,7 @@ public class DashBoard extends JFrame {
 		btnPesquisaPorData.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				btnMaisDetalhes.setVisible(false);
 				if(textPesquisaData.getText() == null || textPesquisaData.getText().trim().isEmpty() || textPesquisaData.getText().length() < 8) {
 					JOptionPane.showMessageDialog(null, "Insira uma data antes");
 				}else {
@@ -921,6 +894,139 @@ public class DashBoard extends JFrame {
 							bd.close();
 						}
 					}
+				}
+			}
+		});
+		
+		btnMaisDetalhes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(bd.getConnection()) {
+					String sql = "\r\n" + 
+							"SELECT PED.COD_PEDIDO AS 'Código', PED.VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), PED.data_pedido, 103) AS 'Data', C.NOME_CLIENTE AS 'Cliente', PROD.NOME AS 'Produto',  case when ped.statusPedido = 1 then 'Pago' when ped.statusPedido = 0 then 'Em Aberto' else 'ERRO' end AS 'Status' from PEDIDO PED, CLIENTE C, PRODUTO PROD WHERE PED.COD_CLIENTE = C.COD_CLIENTE AND PED.COD_PRODUTO = PROD.COD_PRODUTO";
+					
+					try {
+						model = TableModel.getModel(bd, sql);
+						tablePrincipal.setModel(model);
+						
+					}catch(IllegalArgumentException erro) {					
+						JOptionPane.showMessageDialog(null, "Erro 6675");
+					}finally {
+						bd.close();
+					}
+				}
+			}
+		});
+		
+		
+		btnLimpar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				btnMaisDetalhes.setVisible(true);
+				if(bd.getConnection()) {
+					String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido";
+					
+					try {
+						model = TableModel.getModel(bd, sql);
+						tablePrincipal.setModel(model);
+						
+					}catch(IllegalArgumentException erro) {					
+						JOptionPane.showMessageDialog(null, erro.toString());
+					}finally {
+						bd.close();
+					}
+				}
+			}
+		});
+		
+		btnClienteMaisCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(bd.getConnection()) {
+					String sql = "SELECT PED.COD_CLIENTE as 'Código', C.NOME_CLIENTE AS 'Cliente' , COUNT(PED.COD_CLIENTE ) as 'N° de pedidos' FROM PEDIDO PED, CLIENTE C  WHERE PED.COD_CLIENTE = C.COD_CLIENTE GROUP BY PED.COD_CLIENTE, C.NOME_CLIENTE";
+					
+					try {
+						model = TableModel.getModel(bd, sql);
+						tablePrincipal.setModel(model);
+						
+					}catch(IllegalArgumentException erro) {					
+						JOptionPane.showMessageDialog(null, erro.toString());
+					}finally {
+						bd.close();
+					}
+				}
+			}
+		});
+		
+		comboBoxValorCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				btnMaisDetalhes.setVisible(false);
+				
+				String valorCombo = comboBoxValorCompra.getSelectedItem().toString();
+				
+				if(valorCombo.equalsIgnoreCase("Valor do pedido")) {
+					comboBoxValorCompra.setSelectedIndex(0);
+				}
+				
+				switch(valorCombo) {
+					case ">=50":
+						try {
+							buscarPorValor(50, 100);
+						}catch(NullPointerException erro) {
+							JOptionPane.showMessageDialog(null, "Nenhum pedido");
+						}
+						break;
+					case ">=100":
+						try {
+							buscarPorValor(100, 250);
+						}catch(NullPointerException erro) {
+							JOptionPane.showMessageDialog(null, "Nenhum pedido");
+						}
+						break;
+					case "+250":
+						try {
+							buscarPorValor(250, 5000);
+						}catch(NullPointerException erro) {
+							JOptionPane.showMessageDialog(null, "Nenhum pedido");
+						}
+						break;
+					default:
+						buscarPorValor(0, 5000);
+				}
+				
+			}
+		});
+		
+		comboBoxStatus.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				btnMaisDetalhes.setVisible(false);
+				
+				String valorCombo = comboBoxStatus.getSelectedItem().toString();
+				
+				if(valorCombo.equalsIgnoreCase("Status")) {
+					comboBoxStatus.setSelectedIndex(0);
+				}
+				
+				System.out.println(valorCombo);
+				
+				switch(valorCombo) {
+					case "Aberto":
+						try {
+							buscaPorStatus(0);
+						}catch(NullPointerException erro) {
+							JOptionPane.showMessageDialog(null, "Nenhum pedido");
+						}
+						break;
+					case "Pago":
+						try {
+							buscaPorStatus(1);
+						}catch(NullPointerException erro) {
+							JOptionPane.showMessageDialog(null, "Nenhum pedido");
+						}
+						break;
+					default:
+						buscaPorStatus(0);
 				}
 			}
 		});
@@ -960,17 +1066,47 @@ public class DashBoard extends JFrame {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		/* FIM RELATORIO */
 		
+	}
+	
+	public void buscarPorValor(double valorMinimo, double valorMaximo) {
+		DB bd = new DB();
+		if(bd.getConnection()) {
+			String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido WHERE VALOR_PEDIDO >= '" + valorMinimo + "' AND VALOR_PEDIDO < '" + valorMaximo + "'";
+			
+			try {
+				model = TableModel.getModel(bd, sql);
+				tablePrincipal.setModel(model);
+				
+			}catch(IllegalArgumentException erro) {					
+				JOptionPane.showMessageDialog(null, "Nenhum pedido encontrado");
+				
+				model = TableModel.getModel(bd, "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido");
+				tablePrincipal.setModel(model);
+				
+			}finally {
+				bd.close();
+			}
+		}
+	}
+	
+	public void buscaPorStatus(int status) {
+		DB bd = new DB();
+		if(bd.getConnection()) {
+			String sql = "SELECT COD_PEDIDO AS 'Código', VALOR_PEDIDO AS 'Valor', CONVERT(varchar(10), data_pedido, 103) AS 'Data', COD_CLIENTE, COD_PRODUTO, STATUSPEDIDO AS 'Status' from pedido WHERE statusPedido = '" + status + "'";
+			
+			try {
+				model = TableModel.getModel(bd, sql);
+				tablePrincipal.setModel(model);
+				
+			}catch(IllegalArgumentException erro) {					
+				JOptionPane.showMessageDialog(null, "Nenhum pedido encontrado");
+				
+			}finally {
+				bd.close();
+			}
+		}
 	}
 }
 
